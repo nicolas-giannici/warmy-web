@@ -1,0 +1,142 @@
+---
+import Icon from './Icon.astro';
+import { PRODUCTS, priceLabel } from '../data/products';
+const items = ['conejita-lila', 'unicornio-arcoiris', 'almohadon-corazon', 'muneca-trenzas', 'manta-nube', 'top-margarita']
+  .map((s) => PRODUCTS.find((p) => p.slug === s)!);
+---
+<section class="feat on-dark" data-carousel aria-labelledby="feat-title">
+  <div class="wrap feat__head">
+    <div>
+      <p class="label" data-reveal><b>(02)</b> Los más mimados</p>
+      <h2 id="feat-title" class="display h1" data-reveal style="--i:1"><em>Favoritos<br />de la casa</em></h2>
+    </div>
+    <div class="feat__aside" data-reveal style="--i:2">
+      <p>Las piezas que más se piden. Algunas son únicas: cuando se van, no vuelven igual.</p>
+      <div class="feat__ctrl">
+        <button class="icon-btn feat__btn" data-prev aria-label="Anterior"><Icon name="arrow-left" /></button>
+        <button class="icon-btn feat__btn feat__btn--on" data-next aria-label="Siguiente"><Icon name="arrow-right" /></button>
+        <span class="feat__count"><span data-cur>01</span> / {String(items.length).padStart(2, '0')}</span>
+      </div>
+    </div>
+  </div>
+
+  <ul class="feat__track" data-track tabindex="0" aria-label="Productos destacados">
+    {items.map((p, i) => (
+      <li class="feat__item">
+        <a href={`/producto/${p.slug}`} class="feat__media" style={`--bg:${p.bg}`} draggable="false">
+          {p.photo
+            ? <img class="feat__photo" src={p.photo} alt={p.name} width="480" height="640" loading="lazy" draggable="false" />
+            : <img src={p.img} alt={p.name} width="216" height="326" loading="lazy" draggable="false" />}
+          <span class="feat__n">N°{String(i + 1).padStart(2, '0')}</span>
+          <span class="tag">{p.tag ?? 'Listo para enviar'}</span>
+        </a>
+        <div class="feat__info">
+          <div>
+            <h3 class="feat__name">{p.name}</h3>
+            <p class="feat__meta">{p.hours} h de tejido · {p.cat}</p>
+          </div>
+          <span class="feat__price">{priceLabel(p)}</span>
+        </div>
+      </li>
+    ))}
+  </ul>
+  <div class="wrap"><div class="feat__bar"><span data-bar></span></div></div>
+</section>
+
+<style>
+  .feat { background: var(--choco); color: var(--cream); padding-block: clamp(80px, 10vw, 140px); overflow: hidden; }
+  .feat__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
+  .feat__head h2 { margin-top: 24px; color: var(--cream); }
+  .feat__aside { max-width: 380px; display: grid; gap: 28px; }
+  .feat__aside p { margin: 0; color: rgb(255 248 241 / .7); line-height: 1.6; }
+  .feat__ctrl { display: flex; align-items: center; gap: 12px; }
+  .feat__btn { width: 60px; height: 60px; border-color: rgb(255 248 241 / .4); color: var(--cream); }
+  .feat__btn:hover { background: rgb(255 248 241 / .1); }
+  .feat__btn--on { background: var(--coral); border-color: var(--coral); color: var(--choco); }
+  .feat__btn--on:hover { background: var(--coral); }
+  .feat__count { font-size: 14px; font-weight: 700; letter-spacing: .14em; }
+
+  .feat__track {
+    list-style: none; margin: clamp(48px, 6vw, 72px) 0 0; padding: 0 var(--pad);
+    display: flex; gap: clamp(18px, 2.2vw, 32px); overflow-x: auto; scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad); scrollbar-width: none; cursor: grab; overscroll-behavior-x: contain;
+  }
+  @media (min-width: 1440px) { .feat__track { padding-inline: calc((100vw - var(--maxw)) / 2 + var(--pad)); } }
+  .feat__track::-webkit-scrollbar { display: none; }
+  .feat__track.is-drag { cursor: grabbing; scroll-snap-type: none; }
+  .feat__track.is-drag a { pointer-events: none; }
+  .feat__item { flex: 0 0 clamp(250px, 28vw, 400px); scroll-snap-align: start; display: grid; gap: 20px; }
+  .feat__media {
+    position: relative; aspect-ratio: 400 / 520; border-radius: 999px 999px 28px 28px; background: var(--bg);
+    display: grid; place-items: center; overflow: hidden; user-select: none; transition: border-radius .6s var(--ease);
+  }
+  .feat__media img { width: 58%; height: 72%; object-fit: contain; transition: transform .8s var(--ease); }
+  .feat__media:hover { border-radius: 40% 40% 28px 28px; }
+  .feat__media:hover img { transform: scale(1.07) translateY(-4px); }
+  .feat__media img.feat__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .feat__media:hover img.feat__photo { transform: scale(1.05); }
+  .feat__media:has(.feat__photo) .feat__n { color: var(--cream); text-shadow: 0 1px 8px rgb(0 0 0 / .45); z-index: 1; }
+  .feat__media .tag { z-index: 1; }
+  .feat__n { position: absolute; left: 24px; bottom: 22px; font-size: 13px; font-weight: 700; letter-spacing: .14em; color: var(--choco); }
+  .feat__media .tag { position: absolute; right: 18px; bottom: 16px; }
+  .feat__info { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .feat__name { font: 500 clamp(22px, 2.2vw, 32px)/1.05 var(--f-display); letter-spacing: -.02em; margin: 0; color: var(--cream); }
+  .feat__meta { margin: 6px 0 0; font-size: 14px; color: rgb(255 248 241 / .6); }
+  .feat__price { padding: 9px 15px; border-radius: 999px; background: var(--cream); color: var(--choco); font-weight: 700; font-size: 15px; white-space: nowrap; }
+  .feat__bar { margin-top: 56px; height: 3px; border-radius: 2px; background: rgb(255 248 241 / .15); overflow: hidden; }
+  .feat__bar span { display: block; height: 100%; width: 20%; background: var(--coral); border-radius: 2px; transform-origin: left; transition: transform .2s linear; }
+  @media (max-width: 640px) { .feat__item { flex-basis: 76vw; } .feat__btn { width: 52px; height: 52px; } }
+</style>
+
+<script>
+  function init() {
+    // Los listeners de window se cortan al salir de la página (ClientRouter no recarga).
+    const ac = new AbortController();
+    const sig = { signal: ac.signal };
+    document.addEventListener('astro:before-swap', () => ac.abort(), { once: true });
+    document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+      const track = root.querySelector<HTMLElement>('[data-track]')!;
+      const bar = root.querySelector<HTMLElement>('[data-bar]')!;
+      const cur = root.querySelector<HTMLElement>('[data-cur]')!;
+      const items = Array.from(track.children) as HTMLElement[];
+      const step = () => (items[1]?.offsetLeft ?? 0) - (items[0]?.offsetLeft ?? 0) || track.clientWidth * 0.8;
+      const update = () => {
+        const max = track.scrollWidth - track.clientWidth;
+        const p = max > 0 ? track.scrollLeft / max : 0;
+        const vis = track.clientWidth / track.scrollWidth;
+        bar.style.width = Math.max(vis, 0.1) * 100 + '%';
+        bar.style.transform = `translateX(${(p * (1 - vis) / Math.max(vis, 0.1)) * 100}%)`;
+        cur.textContent = String(Math.min(items.length, Math.round(track.scrollLeft / step()) + 1)).padStart(2, '0');
+      };
+      root.querySelector('[data-prev]')?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+      root.querySelector('[data-next]')?.addEventListener('click', () => {
+        const atEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 4;
+        track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + step(), behavior: 'smooth' });
+      });
+      track.addEventListener('scroll', update, { passive: true });
+      // Arrastre con mouse
+      let down = false, sx = 0, sl = 0, moved = 0;
+      track.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        down = true; moved = 0; sx = e.clientX; sl = track.scrollLeft;
+      });
+      window.addEventListener('pointermove', (e) => {
+        if (!down) return;
+        const dx = e.clientX - sx; moved = Math.abs(dx);
+        if (moved > 6) track.classList.add('is-drag');
+        track.scrollLeft = sl - dx;
+      }, sig);
+      window.addEventListener('pointerup', () => {
+        if (!down) return; down = false;
+        setTimeout(() => track.classList.remove('is-drag'), 0);
+      }, sig);
+      track.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); track.scrollBy({ left: step(), behavior: 'smooth' }); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); track.scrollBy({ left: -step(), behavior: 'smooth' }); }
+      });
+      update();
+      addEventListener('resize', update, sig);
+    });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

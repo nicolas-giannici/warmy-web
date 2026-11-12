@@ -1,0 +1,328 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Icon from '../../components/Icon.astro';
+import { PRODUCTS, priceLabel, money } from '../../data/products';
+
+export function getStaticPaths() {
+  return PRODUCTS.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const related = PRODUCTS.filter((x) => x.slug !== p.slug).sort((a, b) => (a.cat === p.cat ? -1 : 0) - (b.cat === p.cat ? -1 : 0)).slice(0, 4);
+type Thumb = { img: string; bg: string; alt: string; zoom?: boolean; cover?: boolean };
+const thumbs: Thumb[] = p.photo
+  ? [
+      { img: p.photo, bg: p.bg, alt: `${p.name}, foto real`, cover: true },
+      ...(p.gallery ?? []).map((g, i) => ({ img: g, bg: p.bg, alt: `${p.name}, foto ${i + 2}`, cover: true })),
+      { img: p.img, bg: p.bg, alt: `${p.name}, ilustración` },
+      { img: '/ilus/aguja.svg', bg: 'var(--butter)', alt: 'Tejido a crochet' },
+      { img: '/ilus/regalo.svg', bg: 'var(--sky)', alt: 'Va envuelto para regalo' },
+    ].slice(0, 4)
+  : [
+      { img: p.img, bg: p.bg, alt: `${p.name}, de frente` },
+      { img: p.img, bg: 'var(--lilac)', alt: `${p.name}, detalle`, zoom: true },
+      { img: '/ilus/aguja.svg', bg: 'var(--butter)', alt: 'Tejido a crochet' },
+      { img: '/ilus/regalo.svg', bg: 'var(--sky)', alt: 'Va envuelto para regalo' },
+    ];
+const ficha = [
+  ['Material', 'Algodón peinado 8/6'], ['Relleno', 'Vellón siliconado hipoalergénico'], ['Medida', p.size],
+  ['Ojitos', 'De seguridad, apto bebés'], ['Tiempo de tejido', `${p.hours} horas`],
+];
+const cuotas = money(Math.ceil(p.price / 3));
+---
+<Base title={`${p.name} · Warmy`} description={p.desc}>
+  <nav class="wrap crumbs" aria-label="Migas de pan">
+    <a href="/tienda">Tienda</a><Icon name="chevron-right" size={14} />
+    <a href={`/tienda?cat=${p.cat}`}>{p.cat}</a><Icon name="chevron-right" size={14} />
+    <span aria-current="page">{p.name}</span>
+  </nav>
+
+  <section class="wrap pdp" data-product>
+    <div class="pdp__gallery">
+      <div class="pdp__main" style={`--bg:${p.bg}`} data-main>
+        <img src={thumbs[0].img} alt={p.name} width={p.photo ? 480 : 216} height={p.photo ? 640 : 326} transition:name={`img-${p.slug}`}
+          data-fly data-main-img class:list={[{ 'is-cover': !!p.photo }]} fetchpriority="high" />
+        <span class="sticker pdp__st"><small>TEJIDA EN</small><strong>{p.hours} horas</strong></span>
+      </div>
+      <div class="pdp__thumbs" role="tablist" aria-label="Fotos">
+        {thumbs.map((t, i) => (
+          <button role="tab" aria-selected={i === 0 ? 'true' : 'false'} class="pdp__thumb" style={`background:${t.bg}`}
+            data-thumb={t.img} data-bg={t.bg} data-zoom={t.zoom ? '1' : ''} data-cover={t.cover ? '1' : ''} aria-label={t.alt}>
+            <img src={t.img} alt="" width="120" height="120" loading="lazy" class:list={[{ zoom: t.zoom, 'is-cover': t.cover }]} />
+          </button>
+        ))}
+      </div>
+      <div class="pdp__draco">
+        <span class="pdp__draco-img"><img src="/draco/draco-sentado.webp" alt="Draco" width="720" height="711" loading="lazy" /></span>
+        <span>
+          <b class="hand">Aprobada por Draco ✓</b>
+          <small>Nuestro control de calidad oficial (y probador de almohadones) ya le dio el visto bueno.</small>
+        </span>
+      </div>
+    </div>
+
+    <div class="pdp__info">
+      <div class="pdp__tags">
+        <span class="tag" style="background:var(--lilac)">{p.cat}</span>
+        {p.tag && <span class="tag" style="background:var(--butter)">{p.tag}</span>}
+        <span class="tag" style="background:var(--sage)">{p.from ? 'Se teje a pedido' : 'Lista para enviar'}</span>
+      </div>
+      <h1 class="display pdp__title"><em>{p.name}</em></h1>
+      <p class="pdp__rating"><span class="pdp__stars">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={16} />)}</span> 4,9 · 64 reseñas</p>
+      <p class="hand pdp__note">tejida por Fio con algodón que abraza ♡</p>
+      <div class="pdp__price">
+        <strong class="display">{priceLabel(p)}</strong>
+        {!p.from && <span>3 cuotas sin interés<br />de {cuotas}</span>}
+      </div>
+      <p class="pdp__desc">{p.desc}</p>
+      <hr class="stitches stitches--soft" />
+
+      <fieldset class="pdp__field">
+        <legend>Color <span data-color-name>{p.colors[0].name}</span></legend>
+        <div class="pdp__colors" data-variant={p.colors[0].name}>
+          {p.colors.map((c, i) => (
+            <button type="button" class="swatch" style={`--c:${c.hex}`} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={c.name} data-color={c.name}></button>
+          ))}
+        </div>
+      </fieldset>
+
+      <label class="pdp__toggle">
+        <span class="pdp__toggle-ico"><Icon name="pen" /></span>
+        <span><b>Nombre bordado</b><small>+ $2.500 · suma 2 días</small></span>
+        <input type="checkbox" role="switch" data-embroider />
+        <span class="switch" aria-hidden="true"></span>
+      </label>
+      <div class="pdp__embroider" data-embroider-field hidden>
+        <label><span class="sr-only">Nombre a bordar</span><input type="text" maxlength="14" placeholder="Ej: Olivia" class="hand" /></label>
+      </div>
+
+      <div class="pdp__buy">
+        <div class="qty qty--lg">
+          <button type="button" data-step="-1" aria-label="Restar uno"><Icon name="minus" size={16} /></button>
+          <output data-qty value="1">1</output>
+          <button type="button" data-step="1" aria-label="Sumar uno"><Icon name="plus" size={16} /></button>
+        </div>
+        <button class="btn btn--lg pdp__add" data-add={p.slug} data-price={p.price}><span>Sumar a la bolsa</span><span class="pdp__add-price" data-total>{money(p.price)}</span></button>
+      </div>
+      <a href="/checkout" class="btn btn--lg btn--ghost btn--block" data-buy-now={p.slug}>Comprar ya con <b style="color:var(--lilac-deep);margin-left:4px">Mercado Pago</b></a>
+
+      <ul class="pdp__trust">
+        <li><Icon name="truck" size={22} />Envíos a todo el país en 2–5 días</li>
+        <li><Icon name="gift" size={22} />Va en caja de regalo con tarjeta</li>
+        <li><Icon name="shield" size={22} />Segura para bebés (+0 meses)</li>
+      </ul>
+
+      <div class="pdp__ficha">
+        <p class="pdp__ficha-t">Ficha de tejido</p>
+        <dl>{ficha.map(([a, b]) => <div><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
+      </div>
+      <details class="pdp__acc"><summary>Cuidados y lavado <Icon name="plus" size={18} /></summary><p>Lavar a mano con agua fría y jabón neutro. Secar a la sombra, en horizontal. No usar secarropas.</p></details>
+      <details class="pdp__acc"><summary>Envíos y cambios <Icon name="plus" size={18} /></summary><p>Enviamos con Andreani o Correo Argentino a todo el país. Si algo no te convence, tenés 15 días para cambiarlo (salvo piezas personalizadas).</p></details>
+    </div>
+  </section>
+
+  <section class="making">
+    <div class="wrap">
+      <div class="making__head">
+        <div>
+          <p class="label"><b>✶</b> Así nace</p>
+          <h2 class="display h2"><em>{p.hours} horas,<br />punto por punto</em></h2>
+        </div>
+        <p class="lead">Cada pieza se teje en espiral, sin costuras visibles. Estas son sus etapas.</p>
+      </div>
+      <ol class="making__list">
+        {[
+          ['01', 'Elegir el ovillo', '/ilus/ovillo.svg', 'var(--blush)'],
+          ['02', 'Tejer en espiral', '/ilus/aguja.svg', 'var(--butter)'],
+          ['03', 'Rellenar y coser', p.img, 'var(--lilac)'],
+          ['04', 'Envolver con amor', '/ilus/regalo.svg', 'var(--sky)'],
+        ].map(([n, t, img, bg], i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <div class="making__art" style={`background:${bg}`}><img src={img} alt="" width="160" height="160" loading="lazy" /></div>
+            <span>{n}</span><h3 class="display">{t}</h3>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="wrap related">
+    <h2 class="display h3"><em>Combina con</em></h2>
+    <div class="related__grid">{related.map((r, i) => <ProductCard p={r} i={i} showTag={false} />)}</div>
+  </section>
+</Base>
+
+<style>
+  .crumbs { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; color: var(--cocoa); padding-block: 12px 28px; }
+  .crumbs a:hover { color: var(--choco); text-decoration: underline; }
+  .crumbs [aria-current] { color: var(--choco); font-weight: 700; }
+  .pdp { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 64px); align-items: start; }
+  .pdp__gallery { display: grid; gap: 20px; position: sticky; top: 96px; }
+  .pdp__main { position: relative; aspect-ratio: 760 / 860; max-height: 82vh; border-radius: 999px 999px 32px 32px; background: var(--bg); display: grid; place-items: center; overflow: hidden; transition: background .5s var(--ease); }
+  .pdp__main img { height: 66%; width: auto; transition: opacity .3s, transform .6s var(--ease); }
+  .pdp__main img.is-swap { opacity: 0; transform: scale(1.04); }
+  .pdp__main img.zoom { height: 120%; transform: translateY(18%); }
+  .pdp__st { --d: clamp(96px, 10vw, 140px); position: absolute; left: 6%; bottom: 6%; transform: rotate(-10deg); }
+  .pdp__thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 24px); }
+  .pdp__thumb { aspect-ratio: 1; border-radius: 22px; display: grid; place-items: center; overflow: hidden; transition: transform .3s var(--ease), box-shadow .3s; }
+  .pdp__thumb img { height: 70%; width: auto; }
+  .pdp__main img.is-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pdp__main img.is-cover.is-swap { transform: scale(1.03); }
+  .pdp__thumb img.is-cover { width: 100%; height: 100%; object-fit: cover; }
+  .pdp__thumb { position: relative; }
+  .pdp__thumb img.zoom { height: 150%; transform: translateY(22%); }
+  .pdp__thumb:hover { transform: translateY(-3px); }
+  .pdp__thumb[aria-selected="true"] { box-shadow: 0 0 0 2px var(--choco); }
+  .pdp__draco { display: flex; align-items: center; gap: 18px; padding: 12px 26px 12px 12px; border-radius: 999px; background: var(--paper); }
+  .pdp__draco-img { flex: none; width: 104px; height: 104px; border-radius: 50%; background: var(--lilac); display: grid; place-items: end center; overflow: hidden; }
+  .pdp__draco-img img { width: 90%; height: auto; transform: translateY(6%); transition: transform .5s var(--spring); }
+  .pdp__draco:hover .pdp__draco-img img { transform: translateY(0) rotate(-4deg); }
+  .pdp__draco b { display: block; font-size: 30px; }
+  .pdp__draco small { display: block; font-size: 14px; color: var(--cocoa); line-height: 1.45; }
+
+  .pdp__info { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .pdp__tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pdp__title { font-size: clamp(56px, 7vw, 116px); line-height: .9; }
+  .pdp__rating { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--cocoa); }
+  .pdp__stars { display: inline-flex; gap: 2px; color: var(--coral); }
+  .pdp__stars :global(svg) { fill: currentColor; }
+  .pdp__note { margin: 0; font-size: clamp(24px, 2.2vw, 32px); }
+  .pdp__price { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .pdp__price strong { font-size: clamp(40px, 3.6vw, 52px); font-weight: 600; }
+  .pdp__price span { font-size: 14px; font-weight: 600; color: var(--cocoa); line-height: 1.3; }
+  .pdp__desc { margin: 0; color: var(--cocoa); }
+  .pdp__field { border: 0; padding: 0; margin: 0; }
+  .pdp__field legend { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 10px; }
+  .pdp__field legend span { letter-spacing: 0; text-transform: none; font-weight: 500; color: var(--cocoa); margin-left: 8px; }
+  .pdp__colors { display: flex; gap: 4px; flex-wrap: wrap; }
+  .swatch { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; transition: transform .3s var(--spring); }
+  .swatch::before { content: ""; width: 36px; height: 36px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgb(74 44 34 / .14); }
+  .swatch:hover { transform: scale(1.08); }
+  .swatch[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--choco); }
+  .pdp__toggle { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 20px; background: var(--paper); cursor: pointer; position: relative; }
+  .pdp__toggle-ico { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--white); flex: none; }
+  .pdp__toggle > span:nth-child(2) { flex: 1; display: grid; }
+  .pdp__toggle small { color: var(--cocoa); font-size: 13px; }
+  .pdp__toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .switch { width: 50px; height: 28px; border-radius: 999px; background: var(--line); position: relative; transition: background .3s; flex: none; }
+  .switch::after { content: ""; position: absolute; left: 2px; top: 2px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: transform .45s var(--spring); box-shadow: 0 2px 4px rgb(0 0 0 / .15); }
+  .pdp__toggle input:checked + .switch { background: var(--lilac-deep); }
+  .pdp__toggle input:checked + .switch::after { transform: translateX(22px); }
+  .pdp__toggle input:focus-visible + .switch { outline: 3px solid var(--lilac-deep); outline-offset: 3px; }
+  .pdp__embroider input { width: 100%; padding: 10px 20px; border-radius: 16px; border: 1.5px solid var(--line); background: var(--white); font-size: 30px; color: var(--rose); }
+  .pdp__embroider input:focus { outline: none; border-color: var(--lilac-deep); }
+  .pdp__buy { display: flex; gap: 10px; }
+  .qty--lg { padding: 6px; flex: none; }
+  .qty--lg button { width: 42px; height: 42px; }
+  .pdp__add { flex: 1; justify-content: space-between; min-width: 0; }
+  .pdp__add-price { opacity: .7; font-weight: 500; }
+  .pdp__trust { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .pdp__trust li { display: grid; gap: 8px; font-size: 13px; font-weight: 600; line-height: 1.35; }
+  .pdp__trust :global(svg) { color: var(--lilac-deep); }
+  .pdp__ficha-t { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 8px 0 4px; }
+  .pdp__ficha dl { margin: 0; }
+  .pdp__ficha div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 2px dashed var(--line); font-size: 15px; }
+  .pdp__ficha dt { color: var(--cocoa); }
+  .pdp__ficha dd { margin: 0; font-weight: 700; text-align: right; }
+  .pdp__acc { border-bottom: 2px dashed var(--line); }
+  .pdp__acc summary { list-style: none; display: flex; justify-content: space-between; align-items: center; padding: 16px 0; font-weight: 700; cursor: pointer; }
+  .pdp__acc summary::-webkit-details-marker { display: none; }
+  .pdp__acc summary :global(svg) { transition: transform .4s var(--ease); }
+  .pdp__acc[open] summary :global(svg) { transform: rotate(45deg); }
+  .pdp__acc p { margin: 0 0 18px; color: var(--cocoa); }
+
+  .making { background: var(--paper); margin-top: clamp(80px, 9vw, 120px); padding-block: clamp(70px, 8vw, 110px); }
+  .making__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 48px; }
+  .making__head h2 { margin-top: 20px; }
+  .making__head .lead { max-width: 380px; margin: 0; }
+  .making__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 2.2vw, 32px); }
+  .making__art { aspect-ratio: 304 / 240; border-radius: 24px; display: grid; place-items: center; margin-bottom: 12px; }
+  .making__art img { height: 62%; width: auto; }
+  .making__list span { font-size: 13px; font-weight: 700; letter-spacing: .14em; color: var(--lilac-deep); }
+  .making__list h3 { font-size: clamp(20px, 2vw, 26px); margin-top: 4px; }
+  .related { padding-block: clamp(80px, 9vw, 120px); }
+  .related h2 { margin-bottom: 40px; }
+  .related__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+
+  @media (max-width: 1000px) {
+    .pdp { grid-template-columns: minmax(0, 1fr); }
+    .pdp__gallery { position: static; }
+    .pdp__main { max-height: none; max-width: 640px; width: 100%; justify-self: center; }
+    .making__list, .related__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 520px) {
+    .pdp__draco { border-radius: 28px; padding: 12px 16px 12px 12px; gap: 12px; }
+    .pdp__draco-img { width: 80px; height: 80px; }
+    .pdp__draco b { font-size: 25px; }
+    .pdp__trust { grid-template-columns: 1fr; }
+    .pdp__trust li { grid-template-columns: 24px 1fr; align-items: center; }
+    .pdp__add-price { display: none; }
+    .pdp__add { justify-content: center; padding-inline: 18px; white-space: normal; text-align: center; line-height: 1.15; }
+    .qty--lg { padding: 4px; }
+    .qty--lg button { width: 38px; height: 38px; }
+    .related__grid { gap: 32px 14px; }
+  }
+</style>
+
+<script>
+  function init() {
+    const root = document.querySelector<HTMLElement>('[data-product]');
+    if (!root) return;
+    const main = root.querySelector<HTMLElement>('[data-main]')!;
+    const mainImg = root.querySelector<HTMLImageElement>('[data-main-img]')!;
+    root.querySelectorAll<HTMLElement>('[data-thumb]').forEach((t) => t.addEventListener('click', () => {
+      root.querySelectorAll('[data-thumb]').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+      mainImg.classList.add('is-swap');
+      setTimeout(() => {
+        mainImg.src = t.dataset.thumb!;
+        mainImg.classList.toggle('zoom', !!t.dataset.zoom);
+        mainImg.classList.toggle('is-cover', !!t.dataset.cover);
+        main.style.setProperty('--bg', t.dataset.bg!);
+        mainImg.classList.remove('is-swap');
+      }, 220);
+    }));
+    const variant = root.querySelector<HTMLElement>('[data-variant]')!;
+    const tog = root.querySelector<HTMLInputElement>('[data-embroider]')!;
+    const field = root.querySelector<HTMLElement>('[data-embroider-field]')!;
+    const nameIn = field.querySelector<HTMLInputElement>('input')!;
+    const qty = root.querySelector<HTMLOutputElement>('[data-qty]')!;
+    const totalEl = root.querySelector('[data-total]')!;
+    const unit = Number(root.querySelector<HTMLElement>('[data-add]')!.dataset.price || (totalEl.textContent || '').replace(/\D/g, ''));
+    const EXTRA = 2500;
+    let color = variant.dataset.variant || '';
+    // Variante + recargo del nombre bordado: lo lee app.ts al sumar a la bolsa.
+    const sync = () => {
+      const name = nameIn.value.trim();
+      const emb = tog.checked && !!name;
+      variant.dataset.variant = color + (emb ? ` · Bordado “${name}”` : '');
+      root.dataset.extra = emb ? String(EXTRA) : '0';
+      totalEl.textContent = '$' + ((unit + (emb ? EXTRA : 0)) * Number(qty.value)).toLocaleString('es-AR');
+    };
+    root.querySelectorAll<HTMLElement>('[data-color]').forEach((b) => b.addEventListener('click', () => {
+      root.querySelectorAll('[data-color]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      color = b.dataset.color!;
+      root.querySelector('[data-color-name]')!.textContent = color;
+      sync();
+    }));
+    tog.addEventListener('change', () => { field.hidden = !tog.checked; if (tog.checked) nameIn.focus(); sync(); });
+    nameIn.addEventListener('input', sync);
+    root.querySelectorAll<HTMLElement>('[data-step]').forEach((b) => b.addEventListener('click', () => {
+      const v = Math.max(1, Math.min(9, Number(qty.value) + Number(b.dataset.step)));
+      qty.value = String(v); qty.textContent = String(v);
+      sync();
+    }));
+    root.querySelector<HTMLAnchorElement>('[data-buy-now]')?.addEventListener('click', () => {
+      try {
+        const c = JSON.parse(localStorage.getItem('warmy-cart') || '[]');
+        const slug = root.querySelector<HTMLElement>('[data-add]')!.dataset.add;
+        const v = variant.dataset.variant;
+        if (!c.some((l: any) => l.slug === slug && l.variant === v)) {
+          c.push({ slug, qty: Number(qty.value), variant: v, extra: Number(root.dataset.extra || 0) || undefined });
+          localStorage.setItem('warmy-cart', JSON.stringify(c));
+        }
+      } catch { /* sin storage */ }
+    });
+    sync();
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

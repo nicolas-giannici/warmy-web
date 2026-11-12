@@ -1,0 +1,107 @@
+---
+import Icon from './Icon.astro';
+import { PRODUCTS } from '../data/products';
+// Datos mínimos para que el script del carrito pinte los ítems sin pedirlos al servidor.
+const catalog = Object.fromEntries(PRODUCTS.map((p) => [p.slug, { name: p.name, price: p.price, img: p.photo ?? p.img, cover: !!p.photo, bg: p.bg }]));
+---
+<div class="drawer" data-drawer aria-hidden="true">
+  <div class="drawer__scrim" data-cart-close></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabindex="-1">
+    <header class="drawer__head">
+      <h2 id="drawer-title" class="display">Tu bolsa <sup data-cart-count>0</sup></h2>
+      <button class="icon-btn" data-cart-close aria-label="Cerrar bolsa"><Icon name="x" /></button>
+    </header>
+
+    <div class="drawer__body">
+      <div class="drawer__ship" data-ship>
+        <p data-ship-text>Te faltan $60.000 para el envío gratis</p>
+        <div class="drawer__track"><span data-ship-bar></span><img src="/ilus/ovillo.svg" alt="" width="34" height="34" data-ship-ball /></div>
+      </div>
+      <ul class="drawer__items" data-cart-items></ul>
+
+      <div class="drawer__empty" data-cart-empty>
+        <div class="drawer__empty-art">
+          <img src="/draco/draco-ovillo.webp" alt="Draco jugando con un ovillo de lana" width="720" height="716" loading="lazy" />
+        </div>
+        <p class="display">Tu bolsa está vacía</p>
+        <p class="hand">Draco se llevó el ovillo… ¡pero queda mucho más!</p>
+        <a href="/tienda" class="btn" data-cart-close>Ver la tienda <Icon name="arrow-up-right" /></a>
+      </div>
+    </div>
+
+    <footer class="drawer__foot" data-cart-foot>
+      <label class="drawer__note">
+        <input type="checkbox" data-gift-note />
+        <span><b>Sumar tarjeta escrita a mano</b><em class="hand">la escribe Fio, sin costo ♡</em></span>
+      </label>
+      <div class="drawer__total"><span>Subtotal</span><strong class="display" data-cart-total>$0</strong></div>
+      <a href="/checkout" class="btn btn--lg btn--block">Ir a pagar <Icon name="arrow-right" /></a>
+      <button class="drawer__keep" data-cart-close>o seguí mirando</button>
+    </footer>
+  </aside>
+</div>
+<script type="application/json" id="catalog-data" set:html={JSON.stringify(catalog)} />
+
+<style>
+  .drawer { position: fixed; inset: 0; z-index: 100; pointer-events: none; visibility: hidden; transition: visibility 0s linear .65s; }
+  .drawer.is-open { visibility: visible; transition-delay: 0s; }
+  .drawer__scrim { position: absolute; inset: 0; background: rgb(46 26 19 / .5); backdrop-filter: blur(4px); opacity: 0; transition: opacity .4s var(--ease); }
+  .drawer__panel {
+    position: absolute; top: 0; right: 0; height: 100%; height: 100dvh; width: min(520px, 100%);
+    background: var(--cream); border-radius: 32px 0 0 32px; display: flex; flex-direction: column;
+    transform: translateX(105%); transition: transform .65s var(--spring); box-shadow: -30px 0 80px -30px rgb(46 26 19 / .5);
+  }
+  .drawer.is-open { pointer-events: auto; }
+  .drawer.is-open .drawer__scrim { opacity: 1; }
+  .drawer.is-open .drawer__panel { transform: none; }
+  .drawer__head { display: flex; justify-content: space-between; align-items: center; padding: 26px 28px 12px; }
+  .drawer__head h2 { font-size: 44px; font-style: italic; }
+  .drawer__head sup { font: 700 16px var(--f-body); color: var(--lilac-deep); vertical-align: super; }
+  .drawer__body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 8px 28px 16px; }
+  .drawer__ship { padding: 16px 18px; border-radius: 20px; background: var(--paper); margin-bottom: 18px; }
+  .drawer__ship p { margin: 0 0 8px; font-size: 15px; }
+  .drawer__track { position: relative; height: 34px; }
+  .drawer__track::before { content: ""; position: absolute; left: 0; right: 0; top: 13px; height: 8px; border-radius: 4px; background: var(--line); }
+  .drawer__track span { position: absolute; left: 0; top: 13px; height: 8px; border-radius: 4px; background: var(--coral); width: 0; transition: width .8s var(--ease); }
+  .drawer__track img { position: absolute; top: 0; left: 0; transition: left .8s var(--ease), transform .8s var(--ease); }
+  .drawer__items { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .drawer__empty { display: none; text-align: center; padding: 10px 0 30px; }
+  .drawer__empty-art { width: min(300px, 80%); aspect-ratio: 1; margin: 0 auto 8px; border-radius: 50%; background: var(--blush); display: grid; place-items: center; }
+  .drawer__empty-art img { width: 108%; max-width: none; height: auto; animation: float 5s ease-in-out infinite; }
+  .drawer__empty .display { font-size: 38px; font-style: italic; margin: 8px 0 4px; }
+  .drawer__empty .hand { font-size: 26px; margin: 0 0 22px; }
+  .drawer.is-empty .drawer__empty { display: block; }
+  .drawer.is-empty .drawer__ship, .drawer.is-empty .drawer__foot { display: none; }
+  .drawer__foot { padding: 16px 28px 24px; border-top: 1px solid var(--line); display: grid; gap: 12px; }
+  .drawer__note { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border: 1.5px solid var(--line); border-radius: 18px; cursor: pointer; }
+  .drawer__note input { width: 20px; height: 20px; accent-color: var(--lilac-deep); flex: none; }
+  .drawer__note span { display: flex; flex-direction: column; font-size: 15px; }
+  .drawer__note em { font-style: normal; font-size: 21px; }
+  .drawer__total { display: flex; justify-content: space-between; align-items: baseline; color: var(--cocoa); }
+  .drawer__total strong { font-size: 34px; color: var(--choco); }
+  .drawer__keep { justify-self: center; font-weight: 600; color: var(--cocoa); text-decoration: underline; text-underline-offset: 4px; }
+
+  :global(.line) { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 16px; align-items: center; animation: lineIn .5s var(--ease) both; }
+  :global(.line__img) { width: 96px; height: 110px; border-radius: 18px; display: grid; place-items: center; }
+  :global(.line__img img) { width: 70%; height: 80%; object-fit: contain; }
+  :global(.line__img) { overflow: hidden; }
+  :global(.line__img img.is-cover) { width: 100%; height: 100%; object-fit: cover; }
+  :global(.line__name) { font: 500 22px/1.1 var(--f-display); margin: 0; letter-spacing: -.02em; }
+  :global(.line__var) { font-size: 13px; color: var(--cocoa); margin: 2px 0 8px; }
+  :global(.line__ctrl) { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+  :global(.qty) { display: inline-flex; align-items: center; gap: 4px; border: 1.5px solid var(--line); border-radius: 999px; padding: 2px; }
+  :global(.qty button) { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; }
+  :global(.qty button:hover) { background: var(--paper); }
+  :global(.qty button svg) { width: 14px; height: 14px; }
+  :global(.qty output) { min-width: 18px; text-align: center; font-weight: 700; }
+  :global(.line__rm) { font-size: 13px; color: var(--cocoa); text-decoration: underline; }
+  :global(.line__price) { font-weight: 700; align-self: start; white-space: nowrap; }
+  @keyframes lineIn { from { opacity: 0; transform: translateX(20px); } }
+  @media (max-width: 520px) {
+    .drawer__panel { border-radius: 24px 0 0 24px; }
+    .drawer__head, .drawer__body, .drawer__foot { padding-inline: 20px; }
+    .drawer__head h2 { font-size: 36px; }
+    :global(.line) { grid-template-columns: 76px minmax(0, 1fr) auto; gap: 12px; }
+    :global(.line__img) { width: 76px; height: 90px; }
+  }
+</style>

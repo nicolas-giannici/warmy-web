@@ -1,0 +1,97 @@
+---
+import Icon from './Icon.astro';
+const path = Astro.url.pathname;
+const links = [
+  { href: '/tienda', label: 'Tienda' },
+  { href: '/#a-medida', label: 'A medida' },
+  { href: '/#proceso', label: 'Proceso' },
+  { href: '/#historia', label: 'Historia' },
+  { href: '/#contacto', label: 'Contacto' },
+];
+const active = (h: string) => (h === '/tienda' && (path.startsWith('/tienda') || path.startsWith('/producto')));
+---
+<header class="nav" data-nav>
+  <div class="nav__in wrap">
+    <a href="/" class="nav__logo" aria-label="Warmy, inicio">
+      <span class="nav__word">warmy</span>
+      <span class="nav__tag hand">tejidos con amor</span>
+    </a>
+    <nav class="nav__links" aria-label="Principal">
+      {links.map((l) => <a href={l.href} class:list={['nav__link', { 'is-active': active(l.href) }]}>{l.label}</a>)}
+    </nav>
+    <div class="nav__actions">
+      <a href="/tienda" class="icon-btn nav__hide-sm" aria-label="Buscar"><Icon name="search" /></a>
+      <button class="icon-btn nav__hide-sm" aria-label="Favoritos"><Icon name="heart" /></button>
+      <button class="nav__bag" data-cart-open aria-label="Abrir bolsa">
+        <Icon name="bag" size={18} />
+        <span class="nav__bag-txt">Bolsa</span>
+        <span class="nav__count" data-cart-count>0</span>
+      </button>
+      <button class="icon-btn nav__burger" data-menu-open aria-label="Abrir menú" aria-expanded="false" aria-controls="menu">
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" data-menu hidden>
+  <div class="menu__top wrap">
+    <a href="/" class="nav__word" style="color:var(--cream)">warmy</a>
+    <button class="icon-btn menu__close" data-menu-close aria-label="Cerrar menú"><Icon name="x" /></button>
+  </div>
+  <nav class="menu__links wrap" aria-label="Menú móvil">
+    {links.map((l, i) => <a href={l.href} style={`--i:${i}`} data-menu-link>{l.label}</a>)}
+  </nav>
+  <div class="menu__foot wrap">
+    <div>
+      <a href="https://instagram.com/warmy_acrochet" target="_blank" rel="noopener">@warmy_acrochet</a>
+      <p>Hecho a mano en Buenos Aires</p>
+    </div>
+    <img src="/draco/draco-saludando.webp" alt="Draco, el bulldog francés de Warmy, saludando" width="642" height="720" class="menu__draco" loading="lazy" />
+  </div>
+</div>
+
+<style>
+  .nav { position: sticky; top: 0; z-index: 50; padding-block: 18px; transition: transform .5s var(--ease), background .3s, box-shadow .3s; }
+  .nav.is-scrolled { background: rgb(255 248 241 / .82); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); padding-block: 10px; }
+  .nav.is-hidden { transform: translateY(-110%); }
+  .nav__in { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .nav__logo { display: flex; align-items: flex-end; gap: 6px; }
+  .nav__word { font: italic 600 34px/1 var(--f-display); letter-spacing: -.04em; }
+  .nav__tag { font-size: 15px; transform: rotate(-6deg) translateY(-4px); white-space: nowrap; }
+  .nav__links { display: flex; gap: 2px; padding: 6px; border-radius: 999px; background: rgb(255 255 255 / .7); border: 1px solid var(--line); backdrop-filter: blur(16px); }
+  .nav__link { padding: 10px 18px; border-radius: 999px; font-size: 15px; font-weight: 600; transition: background .25s, color .25s; }
+  .nav__link:hover { background: var(--paper); }
+  .nav__link.is-active { background: var(--choco); color: var(--cream); }
+  .nav__actions { display: flex; gap: 10px; align-items: center; }
+  .nav__bag { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 12px 0 18px; border-radius: 999px; background: var(--choco); color: var(--cream); font-weight: 600; font-size: 15px; transition: transform .35s var(--ease); }
+  .nav__bag:hover { transform: translateY(-2px); }
+  .nav__bag.bump { animation: bump .6s var(--spring); }
+  @keyframes bump { 30% { transform: scale(1.18) rotate(-4deg); } 60% { transform: scale(.95); } }
+  .nav__count { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--coral); color: var(--choco); font-size: 12px; font-weight: 700; }
+  .nav__burger { display: none; }
+
+  .menu { position: fixed; inset: 0; z-index: 90; background: var(--lilac-deep); color: var(--cream); display: flex; flex-direction: column; justify-content: space-between; padding-block: 18px 28px; overflow-y: auto; }
+  .menu[hidden] { display: none; }
+  .menu__top { display: flex; justify-content: space-between; align-items: center; }
+  .menu__close { border-color: rgb(255 248 241 / .35); }
+  .menu__links { display: flex; flex-direction: column; gap: 4px; padding-block: 32px; }
+  .menu__links a { font: 500 clamp(48px, 13vw, 72px)/1.05 var(--f-display); letter-spacing: -.035em; animation: menuIn .7s var(--ease) both; animation-delay: calc(var(--i) * 60ms + 80ms); }
+  .menu__links a:first-child { font-style: italic; }
+  @keyframes menuIn { from { opacity: 0; transform: translateY(40px); } }
+  .menu__foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; border-top: 2px dashed rgb(255 248 241 / .3); padding-top: 20px; }
+  .menu__foot a { font-weight: 700; }
+  .menu__foot p { margin: 4px 0 0; opacity: .75; font-size: 15px; }
+  .menu__draco { width: 150px; height: auto; transform-origin: 70% 90%; animation: wave 1.6s var(--ease) .4s 2; }
+  @keyframes wave { 25% { transform: rotate(-6deg); } 50% { transform: rotate(4deg); } 75% { transform: rotate(-3deg); } }
+
+  @media (max-width: 1080px) {
+    .nav__links, .nav__hide-sm { display: none; }
+    .nav__burger { display: inline-grid; }
+  }
+  @media (max-width: 520px) {
+    .nav__tag, .nav__bag-txt { display: none; }
+    .nav__word { font-size: 30px; }
+    .nav__bag { padding: 0 12px 0 14px; }
+  }
+</style>

@@ -1,0 +1,168 @@
+---
+import Icon from './Icon.astro';
+import conejita from './conejita-config.svg.txt?raw';
+import osito from './osito-config.svg.txt?raw';
+import { WHATSAPP } from '../data/products';
+const colors = [
+  { n: 'Lila', body: '#CDB9EC', inner: '#F6CADB' }, { n: 'Rosa', body: '#F6CADB', inner: '#FFF8F1' },
+  { n: 'Celeste', body: '#BCD9F2', inner: '#F6CADB' }, { n: 'Verde salvia', body: '#BFDCC6', inner: '#F7E3A6' },
+  { n: 'Manteca', body: '#F7E3A6', inner: '#EF8D7E' }, { n: 'Coral', body: '#EF8D7E', inner: '#FFF8F1' },
+  { n: 'Crudo', body: '#FFFFFF', inner: '#F6CADB' }, { n: 'Caramelo', body: '#D9A77F', inner: '#F6CADB' },
+];
+const models = [
+  { id: 'conejita', n: 'Conejita', base: 32000 }, { id: 'osito', n: 'Osito', base: 32000 },
+  { id: 'unicornio', n: 'Unicornio', base: 29000 }, { id: 'muneca', n: 'Muñeca', base: 45000 },
+];
+const sizes = [{ n: '20 cm', k: 0.8 }, { n: '30 cm', k: 1 }, { n: '40 cm', k: 1.35 }];
+---
+<section class="custom" id="a-medida" data-custom data-wa={WHATSAPP} aria-labelledby="custom-title">
+  <div class="wrap custom__in">
+    <div class="custom__stage" data-reveal="scale">
+      <div class="custom__ring"></div>
+      <div class="custom__figure" data-figure style="--body:#BFDCC6;--inner:#F7E3A6;--bow:#7E5BC2">
+        <div class="custom__svg is-on" data-model="conejita" set:html={conejita} />
+        <div class="custom__svg" data-model="osito" set:html={osito} />
+        <img class="custom__svg" data-model="unicornio" src="/ilus/unicornio.svg" alt="" width="216" height="326" />
+        <img class="custom__svg" data-model="muneca" src="/ilus/muneca_pedido.svg" alt="" width="216" height="336" />
+      </div>
+      <span class="custom__name hand" data-name-tag>Olivia</span>
+      <span class="tag custom__t1" data-color-tag>Verde salvia</span>
+      <span class="tag custom__t2" data-size-tag>30 cm</span>
+      <span class="sticker custom__live"><small>VISTA PREVIA</small><strong>en vivo</strong></span>
+    </div>
+
+    <form class="custom__form" data-reveal style="--i:1" onsubmit="return false">
+      <p class="label"><b>(05)</b> Hecho a medida</p>
+      <h2 id="custom-title" class="display h2">Diseñalo vos,<br /><em>Fio lo teje.</em></h2>
+
+      <fieldset>
+        <legend><b>1 —</b> Modelo</legend>
+        <div class="custom__row">
+          {models.map((m, i) => <button type="button" class="chip" aria-pressed={i === 0 ? 'true' : 'false'} data-pick-model={m.id} data-base={m.base}>{m.n}</button>)}
+        </div>
+      </fieldset>
+      <fieldset data-color-field>
+        <legend><b>2 —</b> Color</legend>
+        <div class="custom__row custom__swatches">
+          {colors.map((c, i) => (
+            <button type="button" class="swatch" aria-pressed={i === 3 ? 'true' : 'false'} aria-label={c.n} title={c.n}
+              data-pick-color={c.n} data-body={c.body} data-inner={c.inner} style={`--c:${c.body}`}></button>
+          ))}
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><b>3 —</b> Detalles</legend>
+        <div class="custom__row custom__details">
+          <label class="custom__input">
+            <span>Nombre bordado</span>
+            <input type="text" value="Olivia" maxlength="14" data-name-input autocomplete="off" />
+          </label>
+          <div class="custom__row">
+            {sizes.map((s, i) => <button type="button" class="chip" aria-pressed={i === 1 ? 'true' : 'false'} data-pick-size={s.n} data-k={s.k}>{s.n}</button>)}
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="custom__sum">
+        <div>
+          <span>Estimado</span>
+          <strong class="display" data-estimate>$34.500</strong>
+          <small>Listo en 10–14 días</small>
+        </div>
+        <a class="btn btn--lg" data-wa-link href="#" target="_blank" rel="noopener">Pedir por WhatsApp <Icon name="whatsapp" /></a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .custom { background: var(--cielo); padding-block: clamp(80px, 9vw, 130px); overflow: hidden; }
+  .custom__in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 560px); gap: clamp(32px, 5vw, 80px); align-items: center; }
+  .custom__stage { position: relative; aspect-ratio: 1; max-width: 640px; width: 100%; justify-self: center; }
+  .custom__ring { position: absolute; inset: 0; border-radius: 50%; background: rgb(255 255 255 / .55); }
+  .custom__ring::after { content: ""; position: absolute; inset: 6%; border-radius: 50%; border: 2px solid #fff; }
+  .custom__figure { position: absolute; inset: 8% 22%; display: grid; place-items: center; }
+  .custom__svg { grid-area: 1 / 1; width: 100%; height: 100%; display: grid; place-items: center; opacity: 0; transform: scale(.85) translateY(20px); transition: opacity .45s var(--ease), transform .7s var(--spring); }
+  .custom__svg :global(svg), .custom__svg[src] { width: 100%; height: 100%; object-fit: contain; }
+  .custom__svg :global(svg *) { transition: fill .5s var(--ease); }
+  .custom__svg.is-on { opacity: 1; transform: none; }
+  .custom__figure.is-bounce .is-on { animation: squish .55s var(--spring); }
+  @keyframes squish { 30% { transform: scale(1.06, .94); } 60% { transform: scale(.97, 1.03); } }
+  .custom__name { position: absolute; right: 12%; bottom: 14%; padding: 2px 22px; border-radius: 999px; background: var(--rose); color: var(--cream); font-size: clamp(26px, 3vw, 40px); transform: rotate(8deg); max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .custom__t1 { position: absolute; left: 4%; top: 18%; transform: rotate(-8deg); }
+  .custom__t2 { position: absolute; right: 6%; top: 14%; transform: rotate(6deg); }
+  .custom__live { --d: clamp(90px, 10vw, 130px); position: absolute; left: 2%; bottom: 6%; transform: rotate(-14deg); }
+
+  .custom__form { display: grid; gap: 26px; }
+  .custom__form h2 { margin: -6px 0 0; }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  legend { padding: 0; margin-bottom: 12px; font-weight: 700; font-size: 18px; }
+  legend b { color: var(--lilac-deep); font-size: 14px; letter-spacing: .1em; margin-right: 8px; }
+  .custom__row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .custom__swatches { gap: 4px; }
+  .swatch { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; transition: transform .3s var(--spring); }
+  .swatch::before { content: ""; width: 38px; height: 38px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgb(74 44 34 / .14); }
+  .swatch:hover { transform: scale(1.1); }
+  .swatch[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--choco); }
+  [data-color-field].is-off { opacity: .4; pointer-events: none; }
+  .custom__details { gap: 14px; }
+  .custom__input { display: grid; padding: 10px 20px; border-radius: 18px; background: var(--white); width: min(260px, 100%); }
+  .custom__input span { font-size: 13px; font-weight: 600; color: var(--cocoa); }
+  .custom__input input { border: 0; padding: 0; background: none; font: 600 30px/1.1 var(--f-hand); outline: none; width: 100%; }
+  .custom__input:focus-within { box-shadow: 0 0 0 3px var(--lilac-deep); }
+  .custom__sum { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 22px 22px 22px 28px; border-radius: 28px; background: rgb(255 255 255 / .7); backdrop-filter: blur(10px); }
+  .custom__sum span, .custom__sum small { display: block; font-size: 14px; color: var(--cocoa); font-weight: 600; }
+  .custom__sum strong { font-size: 40px; display: block; line-height: 1.1; }
+  @media (max-width: 960px) {
+    .custom__in { grid-template-columns: 1fr; }
+    .custom__stage { max-width: 440px; }
+    .custom__sum .btn { width: 100%; }
+  }
+</style>
+
+<script>
+  function init() {
+    const root = document.querySelector<HTMLElement>('[data-custom]');
+    if (!root) return;
+    const fig = root.querySelector<HTMLElement>('[data-figure]')!;
+    const st = { model: 'conejita', modelName: 'Conejita', base: 32000, color: 'Verde salvia', size: '30 cm', k: 1, name: 'Olivia' };
+    const press = (sel: string, btn: Element) => {
+      root.querySelectorAll(sel).forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    };
+    const bounce = () => { fig.classList.remove('is-bounce'); void fig.offsetWidth; fig.classList.add('is-bounce'); };
+    const render = () => {
+      const price = (st.base + (st.name ? 2500 : 0)) * st.k;
+      root.querySelector('[data-estimate]')!.textContent = '$' + (Math.round(price / 500) * 500).toLocaleString('es-AR');
+      root.querySelector('[data-name-tag]')!.textContent = st.name || '—';
+      (root.querySelector('[data-name-tag]') as HTMLElement).style.visibility = st.name ? 'visible' : 'hidden';
+      root.querySelector('[data-size-tag]')!.textContent = st.size;
+      const colorable = st.model === 'conejita' || st.model === 'osito';
+      root.querySelector('[data-color-field]')!.classList.toggle('is-off', !colorable);
+      root.querySelector('[data-color-tag]')!.textContent = colorable ? st.color : 'Colores del modelo';
+      const msg = `¡Hola Fio! Quiero pedir a medida:\n• Modelo: ${st.modelName}\n• Color: ${colorable ? st.color : 'como en la foto'}\n• Tamaño: ${st.size}\n• Nombre bordado: ${st.name || 'sin nombre'}`;
+      (root.querySelector('[data-wa-link]') as HTMLAnchorElement).href = `https://wa.me/${root.dataset.wa}?text=${encodeURIComponent(msg)}`;
+    };
+    root.querySelectorAll<HTMLElement>('[data-pick-model]').forEach((b) => b.addEventListener('click', () => {
+      press('[data-pick-model]', b);
+      st.model = b.dataset.pickModel!; st.modelName = b.textContent!.trim(); st.base = Number(b.dataset.base);
+      root.querySelectorAll<HTMLElement>('[data-model]').forEach((m) => m.classList.toggle('is-on', m.dataset.model === st.model));
+      render();
+    }));
+    root.querySelectorAll<HTMLElement>('[data-pick-color]').forEach((b) => b.addEventListener('click', () => {
+      press('[data-pick-color]', b);
+      st.color = b.dataset.pickColor!;
+      fig.style.setProperty('--body', b.dataset.body!); fig.style.setProperty('--inner', b.dataset.inner!);
+      bounce(); render();
+    }));
+    root.querySelectorAll<HTMLElement>('[data-pick-size]').forEach((b) => b.addEventListener('click', () => {
+      press('[data-pick-size]', b);
+      st.size = b.dataset.pickSize!; st.k = Number(b.dataset.k);
+      fig.style.scale = String(0.85 + (st.k - 0.8) * 0.4); render();
+    }));
+    root.querySelector<HTMLInputElement>('[data-name-input]')!.addEventListener('input', (e) => {
+      st.name = (e.target as HTMLInputElement).value.trim(); render();
+    });
+    render();
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

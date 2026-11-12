@@ -1,0 +1,92 @@
+---
+import Icon from './Icon.astro';
+import { CATEGORIES, PRODUCTS } from '../data/products';
+const count = (c: string) => PRODUCTS.filter((p) => p.cat === c).length;
+---
+<section class="cats wrap" data-cats aria-labelledby="cats-title">
+  <div class="cats__head">
+    <div>
+      <p class="label" data-reveal><b>(03)</b> Explorá</p>
+      <h2 id="cats-title" class="display h2" data-reveal style="--i:1">Todo lo que<br />sale del ovillo</h2>
+    </div>
+    <img src="/ilus/ovillo-hilo.svg" alt="" width="276" height="206" class="cats__yarn" data-reveal="scale" />
+  </div>
+
+  <ol class="cats__list">
+    {CATEGORIES.map((c, i) => (
+      <li data-reveal style={`--i:${i}`}>
+        <a href={c.name === 'Personalizados' ? '/#a-medida' : `/tienda?cat=${c.name}`} class="cats__row" data-img={c.img} data-bg={c.bg}>
+          <span class="cats__num">0{i + 1}</span>
+          <span class="cats__name">{c.name}</span>
+          <span class="cats__blurb">{c.blurb}</span>
+          <span class="cats__count">{c.name === 'Personalizados' ? 'a pedido' : `${count(c.name)} piezas`}</span>
+          <span class="cats__go"><Icon name="arrow-up-right" /></span>
+        </a>
+      </li>
+    ))}
+  </ol>
+  <div class="cats__preview" data-preview aria-hidden="true"><img alt="" width="216" height="326" /></div>
+</section>
+
+<style>
+  .cats { padding-block: clamp(90px, 10vw, 140px); position: relative; }
+  .cats__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: clamp(40px, 5vw, 72px); }
+  .cats__head h2 { margin-top: 22px; }
+  .cats__yarn { width: clamp(120px, 15vw, 220px); height: auto; }
+  .cats__list { list-style: none; margin: 0; padding: 0; }
+  .cats__list li { border-top: 2px dashed var(--line); }
+  .cats__list li:last-child { border-bottom: 2px dashed var(--line); }
+  .cats__row {
+    display: grid; grid-template-columns: 60px 1fr auto auto 56px; align-items: center; gap: 24px;
+    padding: clamp(14px, 1.8vw, 22px) 0; border-radius: 24px; position: relative;
+    transition: background .45s var(--ease), padding .45s var(--ease);
+  }
+  .cats__num { font-size: 15px; font-weight: 700; color: var(--cocoa); }
+  .cats__name { font: 500 clamp(40px, 7vw, 104px)/1 var(--f-display); letter-spacing: -.04em; transition: font-style .3s, transform .5s var(--ease); }
+  .cats__blurb { font-family: var(--f-hand); font-size: 26px; color: var(--rose); opacity: 0; transform: translateX(-10px); transition: opacity .35s, transform .45s var(--ease); white-space: nowrap; }
+  .cats__count { font-size: 15px; font-weight: 600; color: var(--cocoa); white-space: nowrap; }
+  .cats__go { width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; transition: background .3s, color .3s, transform .45s var(--ease), border-color .3s; }
+  .cats__row:hover, .cats__row:focus-visible { background: var(--lilac); padding-inline: 24px; }
+  .cats__row:hover .cats__name, .cats__row:focus-visible .cats__name { font-style: italic; }
+  .cats__row:hover .cats__blurb { opacity: 1; transform: none; }
+  .cats__row:hover .cats__go { background: var(--choco); color: var(--cream); border-color: var(--choco); transform: rotate(45deg); }
+  .cats__preview {
+    position: fixed; left: 0; top: 0; z-index: 40; width: 260px; aspect-ratio: 4 / 3; border-radius: 22px; pointer-events: none;
+    display: grid; place-items: center; box-shadow: 0 30px 50px -24px rgb(74 44 34 / .5);
+    opacity: 0; transform: translate3d(var(--x, 0), var(--y, 0), 0) rotate(-7deg) scale(.6); transition: opacity .3s, transform .5s var(--ease) ;
+  }
+  .cats__preview.is-on { opacity: 1; transform: translate3d(var(--x, 0), var(--y, 0), 0) rotate(-7deg) scale(1); }
+  .cats__preview img { width: 50%; height: 80%; object-fit: contain; }
+  @media (max-width: 900px) {
+    .cats__row { grid-template-columns: 34px minmax(0, 1fr) auto 44px; gap: 12px; }
+    .cats__blurb { display: none; }
+    .cats__go { width: 44px; height: 44px; }
+    .cats__num { font-size: 13px; }
+  }
+  @media (max-width: 520px) { .cats__count { display: none; } .cats__row { grid-template-columns: 30px minmax(0, 1fr) 44px; } .cats__name { font-size: clamp(30px, 9vw, 40px); overflow-wrap: anywhere; } .cats__yarn { width: 100px; } }
+  @media (hover: none) { .cats__preview { display: none; } }
+</style>
+
+<script>
+  function init() {
+    const root = document.querySelector<HTMLElement>('[data-cats]');
+    if (!root || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    const pv = root.querySelector<HTMLElement>('[data-preview]')!;
+    const img = pv.querySelector('img')!;
+    let x = 0, y = 0, tx = 0, ty = 0, raf = 0;
+    const loop = () => {
+      x += (tx - x) * 0.14; y += (ty - y) * 0.14;
+      pv.style.setProperty('--x', x + 'px'); pv.style.setProperty('--y', y + 'px');
+      raf = requestAnimationFrame(loop);
+    };
+    root.querySelectorAll<HTMLAnchorElement>('.cats__row').forEach((row) => {
+      row.addEventListener('pointerenter', () => {
+        img.src = row.dataset.img!; pv.style.background = row.dataset.bg!; pv.classList.add('is-on');
+        cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+      });
+      row.addEventListener('pointerleave', () => { pv.classList.remove('is-on'); setTimeout(() => cancelAnimationFrame(raf), 400); });
+      row.addEventListener('pointermove', (e) => { tx = Math.min(e.clientX + 30, innerWidth - 290); ty = Math.max(10, e.clientY - 200); });
+    });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

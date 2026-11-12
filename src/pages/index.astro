@@ -1,0 +1,205 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Featured from '../components/Featured.astro';
+import Categories from '../components/Categories.astro';
+import Custom from '../components/Custom.astro';
+import Icon from '../components/Icon.astro';
+
+const steps = [
+  { n: '01', t: 'Elegís', d: 'Una pieza de la tienda o tu idea a medida, con colores y nombre.', img: '/ilus/ovillo.svg', bg: 'var(--blush)', time: '1 día' },
+  { n: '02', t: 'Fio teje', d: 'Punto por punto, con algodón peinado hipoalergénico y relleno siliconado.', img: '/ilus/aguja.svg', bg: 'var(--butter)', time: '7–20 h' },
+  { n: '03', t: 'Control de Draco', d: 'Draco revisa cada costura y los ojitos de seguridad. Si no la aprueba, no sale del taller.', img: '/draco/draco-sentado.webp', bg: 'var(--lilac)', time: '1 día', draco: true },
+  { n: '04', t: 'Llega envuelto', d: 'En caja de regalo con tarjeta escrita a mano. A todo el país.', img: '/ilus/regalo.svg', bg: 'var(--sky)', time: '2–5 días' },
+];
+const reviews = [
+  { q: 'Llegó con una cartita y mi hija no lo suelta ni para dormir.', who: 'Caro · Rosario', img: '/fotos/unicornio-nena.webp', bg: 'var(--blush)', r: -5, photo: true },
+  { q: 'La manta nube es más linda en persona. Suavecita.', who: 'Meli · CABA', img: '/ilus/manta.svg', bg: 'var(--lilac)', r: 4 },
+  { q: 'Le pedí una muñeca igual a mi abuela y lloré.', who: 'Juli · Córdoba', img: '/fotos/muneca-a-pedido-2.webp', bg: 'var(--butter)', r: -2, photo: true },
+  { q: 'Los mitones son lo más abrigado que tengo.', who: 'Sofi · Mendoza', img: '/fotos/mitones.webp', bg: 'var(--sky)', r: 6, photo: true },
+];
+const insta = [
+  { img: '/fotos/conejita-lila.webp' }, { img: '/fotos/logo-draco.webp' }, { img: '/fotos/unicornio-nena.webp' },
+  { img: '/fotos/muneca-a-pedido.webp' }, { img: '/fotos/mitones.webp' }, { img: '/fotos/almohadon-corazon.webp' },
+];
+---
+<Base>
+  <Hero />
+
+  <!-- Manifiesto -->
+  <section class="mani wrap" id="historia" aria-labelledby="mani-title">
+    <p class="label" data-reveal><b>(01)</b> Manifiesto</p>
+    <h2 id="mani-title" class="display mani__lines">
+      <span class="mani__line" data-reveal>Cada punto <i class="mani__pill" style="--bg:var(--blush)"><img src="/ilus/conejita.svg" alt="" width="216" height="326" loading="lazy" /></i></span>
+      <span class="mani__line" data-reveal style="--i:1"><i class="mani__pill mani__pill--sm" style="--bg:var(--sky)"><img src="/ilus/corazon.svg" alt="" width="236" height="216" loading="lazy" /></i> <em>tiene nombre,</em></span>
+      <span class="mani__line" data-reveal style="--i:2">y cada muñeco <i class="mani__pill" style="--bg:var(--lilac)"><img src="/ilus/unicornio.svg" alt="" width="216" height="326" loading="lazy" /></i></span>
+      <span class="mani__line" data-reveal style="--i:3">una dueña. <span class="hand mani__sign">— Fio, tejedora</span></span>
+    </h2>
+    <div class="mani__foot">
+      <hr class="stitches" data-reveal="left" />
+      <div data-reveal style="--i:1">
+        <p class="lead">Warmy nació en una mesa de cocina con un ovillo lila y una aguja prestada. Hoy cada pieza sigue saliendo de las mismas manos: sin fábricas, sin apuro, con algodón que abraza.</p>
+        <a href="#proceso" class="mani__link">Conocé el proceso <Icon name="arrow-up-right" size={18} /></a>
+      </div>
+    </div>
+  </section>
+
+  <Featured />
+  <Categories />
+
+  <!-- Proceso -->
+  <section class="proc" id="proceso" aria-labelledby="proc-title">
+    <div class="wrap">
+      <div class="proc__head">
+        <div>
+          <p class="label" data-reveal><b>(04)</b> El proceso</p>
+          <h2 id="proc-title" class="display h2" data-reveal style="--i:1">Del ovillo<br />a tus manos</h2>
+        </div>
+        <p class="lead" data-reveal style="--i:2">Nada sale de una máquina. Por eso cada pieza tiene pequeñas diferencias: es la firma de lo hecho a mano.</p>
+      </div>
+      <ol class="proc__grid">
+        {steps.map((s, i) => (
+          <li class="proc__step" data-reveal style={`--i:${i % 2}`}>
+            <div class="proc__art" style={`background:${s.bg}`}>
+              <span class="proc__n">{s.n}</span>
+              <img src={s.img} alt={s.draco ? 'Draco, el bulldog francés, sentado' : ''} width="220" height="220" loading="lazy" class:list={[{ 'proc__draco': s.draco }]} />
+            </div>
+            <div class="proc__row"><h3 class="display">{s.t}</h3><span class="tag">{s.time}</span></div>
+            <p>{s.d}</p>
+          </li>
+        ))}
+      </ol>
+      <hr class="stitches proc__sep" />
+      <ul class="proc__stats">
+        <li data-reveal><strong class="display"><em>14 h</em></strong><span>promedio de tejido por amigurumi</span></li>
+        <li data-reveal style="--i:1"><strong class="display"><em>100%</em></strong><span>algodón peinado, apto bebés</span></li>
+        <li data-reveal style="--i:2"><strong class="display"><em>+380</em></strong><span>familias con un Warmy en casa</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <Custom />
+
+  <!-- Reseñas -->
+  <section class="rev wrap" aria-labelledby="rev-title">
+    <div class="rev__head">
+      <div>
+        <p class="label" data-reveal><b>(06)</b> Reseñas</p>
+        <h2 id="rev-title" class="display h2" data-reveal style="--i:1">Abrazos<br />que llegan</h2>
+      </div>
+      <div class="rev__score" data-reveal style="--i:2">
+        <strong class="display"><em>4,9</em></strong>
+        <span class="rev__stars" aria-label="5 estrellas">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={20} />)}</span>
+        <small>230 reseñas verificadas</small>
+      </div>
+    </div>
+    <ul class="rev__wall">
+      {reviews.map((r, i) => (
+        <li class="rev__pol" style={`--r:${r.r}deg;--i:${i}`} data-reveal="drop">
+          <div class="rev__img" style={`background:${r.bg}`}><img src={r.img} alt="" width="216" height="326" loading="lazy" class:list={[{ 'is-photo': r.photo }]} /></div>
+          <span class="rev__stars">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={15} />)}</span>
+          <blockquote class="hand">“{r.q}”</blockquote>
+          <cite>{r.who}</cite>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Instagram -->
+  <section class="ig" aria-labelledby="ig-title">
+    <div class="wrap">
+      <div class="ig__head">
+        <h2 id="ig-title" class="display h2" data-reveal><em>@warmy_acrochet</em></h2>
+        <a href="https://instagram.com/warmy_acrochet" target="_blank" rel="noopener" class="btn btn--lg" data-reveal style="--i:1">Seguinos <Icon name="instagram" /></a>
+      </div>
+      <ul class="ig__grid">
+        {insta.map((t, i) => (
+          <li data-reveal="scale" style={`--i:${i}`}>
+            <a href="https://instagram.com/warmy_acrochet" target="_blank" rel="noopener" class="ig__tile" aria-label="Ver en Instagram">
+              <img src={t.img} alt="" width="480" height="640" loading="lazy" decoding="async" />
+              <span class="ig__hover"><Icon name="instagram" size={26} /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Manifiesto */
+  .mani { padding-block: clamp(90px, 10vw, 140px); }
+  .mani__lines { margin: clamp(36px, 4vw, 56px) 0 clamp(48px, 5vw, 72px); font-size: clamp(42px, 7.8vw, 112px); line-height: 1.02; display: grid; gap: .08em; }
+  .mani__line { display: flex; align-items: center; gap: .22em; flex-wrap: wrap; }
+  .mani__line em { color: var(--lilac-deep); }
+  .mani__pill { display: inline-grid; place-items: center; width: 2.05em; height: 1.05em; border-radius: 999px; background: var(--bg); overflow: hidden; vertical-align: middle; }
+  .mani__pill--sm { width: 1.6em; }
+  .mani__pill img { width: 62%; height: auto; transform: translateY(18%); transition: transform .7s var(--spring); }
+  .mani__pill:hover img { transform: translateY(4%) rotate(-6deg); }
+  .mani__sign { font-size: .4em; transform: rotate(4deg); align-self: flex-end; letter-spacing: 0; }
+  .mani__foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: 48px; align-items: end; }
+  .mani__foot .stitches { max-width: 520px; color: var(--choco); }
+  .mani__link { display: inline-flex; gap: 6px; align-items: center; margin-top: 18px; font-weight: 700; text-decoration: underline; text-underline-offset: 5px; }
+  @media (max-width: 760px) { .mani__foot { grid-template-columns: 1fr; gap: 28px; } }
+
+  /* Proceso */
+  .proc { background: var(--paper); padding-block: clamp(90px, 10vw, 140px); }
+  .proc__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; flex-wrap: wrap; margin-bottom: clamp(48px, 5vw, 80px); }
+  .proc__head h2 { margin-top: 22px; }
+  .proc__head .lead { max-width: 420px; margin: 0; }
+  .proc__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 4.4vw, 64px); }
+  .proc__art { position: relative; height: clamp(190px, 17vw, 240px); border-radius: 28px; overflow: hidden; }
+  .proc__n { position: absolute; left: 24px; top: 0; font: italic 500 clamp(140px, 14vw, 200px)/1 var(--f-display); letter-spacing: -.05em; color: rgb(74 44 34 / .15); }
+  .proc__art img { position: absolute; right: 12%; top: 50%; width: auto; height: 76%; transform: translateY(-50%); transition: transform .7s var(--spring); }
+  .proc__art img.proc__draco { height: 98%; top: auto; bottom: -4%; transform: none; }
+  .proc__step:hover .proc__art img:not(.proc__draco) { transform: translateY(-54%) rotate(-6deg) scale(1.05); }
+  .proc__step:hover .proc__draco { transform: translateY(-4%) rotate(3deg); }
+  .proc__row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 18px 0 8px; }
+  .proc__row h3 { font-size: clamp(28px, 2.6vw, 36px); }
+  .proc__step p { margin: 0; color: var(--cocoa); max-width: 34em; }
+  .proc__sep { margin-block: clamp(64px, 7vw, 96px) clamp(40px, 5vw, 64px); color: rgb(74 44 34 / .35); }
+  .proc__stats { list-style: none; margin: 0; padding: 0; display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+  .proc__stats li { display: grid; gap: 4px; }
+  .proc__stats strong { font-size: clamp(64px, 8.4vw, 120px); line-height: 1; }
+  .proc__stats span { font-weight: 600; color: var(--cocoa); max-width: 15em; }
+  @media (max-width: 760px) { .proc__grid { grid-template-columns: 1fr; } }
+
+  /* Reseñas */
+  .rev { padding-block: clamp(90px, 10vw, 140px); }
+  .rev__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; flex-wrap: wrap; }
+  .rev__head h2 { margin-top: 22px; }
+  .rev__score { display: grid; justify-items: end; gap: 6px; }
+  .rev__score strong { font-size: clamp(64px, 6.6vw, 96px); line-height: 1; }
+  .rev__score small { font-weight: 600; color: var(--cocoa); }
+  .rev__stars { display: inline-flex; gap: 3px; color: var(--coral); }
+  .rev__stars :global(svg) { fill: currentColor; }
+  .rev__wall { list-style: none; margin: clamp(48px, 5vw, 72px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 40px); }
+  .rev__pol { background: var(--white); padding: 14px 14px 22px; display: grid; gap: 10px; box-shadow: 0 14px 36px -16px rgb(74 44 34 / .3); transform: rotate(var(--r)); transition: transform .6s var(--spring); }
+  .rev__pol:nth-child(even) { margin-top: 40px; }
+  .rev__pol:hover { transform: rotate(0) translateY(-8px) scale(1.03); z-index: 2; }
+  .rev__img { aspect-ratio: 268 / 230; display: grid; place-items: center; border-radius: 4px; }
+  .rev__img { overflow: hidden; position: relative; }
+  .rev__img img { height: 80%; width: auto; }
+  .rev__img img.is-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .rev__pol blockquote { margin: 0; font-size: clamp(22px, 1.9vw, 27px); color: var(--choco); }
+  .rev__pol cite { font-style: normal; font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--cocoa); }
+  @media (prefers-reduced-motion: no-preference) {
+    .js .rev__pol[data-reveal] { transform: translateY(-60px) rotate(calc(var(--r) * 3)); transition: opacity .6s var(--ease), transform 1s var(--spring); transition-delay: calc(var(--i) * 120ms); }
+    .js .rev__pol[data-reveal].is-in { transform: rotate(var(--r)); }
+  }
+  @media (max-width: 1000px) { .rev__wall { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .rev__wall { gap: 14px; } .rev__pol { padding: 10px 10px 16px; } .rev__pol blockquote { font-size: 20px; } }
+
+  /* Instagram */
+  .ig { background: var(--blush); padding-block: clamp(80px, 9vw, 120px); }
+  .ig__head { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 44px; }
+  .ig__head h2 { font-size: clamp(36px, 7.4vw, 110px); overflow-wrap: anywhere; }
+  .ig__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 22px); }
+  .ig__tile { position: relative; display: grid; place-items: center; aspect-ratio: 200 / 240; border-radius: 24px; overflow: hidden; }
+  .ig__tile { background: var(--paper); }
+  .ig__tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease); }
+  .ig__hover { position: absolute; inset: 0; display: grid; place-items: center; background: rgb(74 44 34 / .45); color: var(--cream); opacity: 0; transition: opacity .3s; }
+  .ig__tile:hover img { transform: scale(1.08); }
+  .ig__tile:hover .ig__hover { opacity: 1; }
+  @media (max-width: 900px) { .ig__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

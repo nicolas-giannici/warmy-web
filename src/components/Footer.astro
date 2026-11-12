@@ -1,0 +1,79 @@
+---
+import Icon from './Icon.astro';
+const cols = [
+  { t: 'Tienda', l: [['Amigurumis', '/tienda?cat=Amigurumis'], ['Mantas', '/tienda?cat=Mantas'], ['Tops', '/tienda?cat=Tops'], ['Accesorios', '/tienda?cat=Accesorios'], ['Personalizados', '/#a-medida']] },
+  { t: 'Ayuda', l: [['Envíos', '/#contacto'], ['Cambios', '/#contacto'], ['Cuidados', '/#contacto'], ['Preguntas', '/#contacto']] },
+  { t: 'Warmy', l: [['Historia', '/#historia'], ['Proceso', '/#proceso'], ['Instagram', 'https://instagram.com/warmy_acrochet'], ['WhatsApp', '/#a-medida']] },
+];
+---
+<footer class="foot on-dark" id="contacto">
+  <div class="wrap foot__top">
+    <form class="foot__news" data-news>
+      <h2 class="display h3"><em>Sumate al club<br />del ovillo</em></h2>
+      <p>Novedades, cupos para pedidos a medida y descuentos solo para el club. Un mail por mes, prometido.</p>
+      <div class="foot__field">
+        <label for="news-mail" class="sr-only">Tu email</label>
+        <input id="news-mail" type="email" required placeholder="tu@email.com" autocomplete="email" />
+        <button class="btn btn--coral" type="submit">Quiero <Icon name="arrow-right" /></button>
+      </div>
+      <p class="foot__ok hand" data-news-ok hidden>¡Listo! Draco te manda un lengüetazo ♡</p>
+    </form>
+    <nav class="foot__cols" aria-label="Pie">
+      {cols.map((c) => (
+        <div>
+          <p class="foot__t">{c.t}</p>
+          <ul>{c.l.map(([n, h]) => <li><a href={h}>{n}</a></li>)}</ul>
+        </div>
+      ))}
+    </nav>
+  </div>
+  <div class="wrap foot__legal">
+    <p>© 2026 Warmy · Hecho a mano en Buenos Aires</p>
+    <p>Mercado Pago · Transferencia · Envíos a todo el país</p>
+  </div>
+  <div class="foot__giant" aria-hidden="true">
+    <span class="foot__word">warmy</span>
+    <div class="foot__draco">
+      <span class="foot__shh hand">shh… Draco duerme la siesta</span>
+      <span class="foot__z">z</span><span class="foot__z">z</span><span class="foot__z">Z</span>
+      <img src="/draco/draco-durmiendo.webp" alt="" width="707" height="720" loading="lazy" />
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot { background: var(--choco); color: var(--cream); padding-top: clamp(72px, 9vw, 120px); overflow: hidden; position: relative; }
+  .foot__top { display: flex; justify-content: space-between; gap: 48px; flex-wrap: wrap; }
+  .foot__news { max-width: 520px; display: grid; gap: 20px; }
+  .foot__news h2 { color: var(--cream); }
+  .foot__news > p { margin: 0; color: rgb(255 248 241 / .72); max-width: 30em; }
+  .foot__field { display: flex; gap: 10px; flex-wrap: wrap; }
+  .foot__field input { flex: 1 1 220px; min-width: 0; min-height: 56px; padding: 0 24px; border-radius: 999px; background: transparent; border: 1.5px solid rgb(255 248 241 / .35); color: var(--cream); }
+  .foot__field input::placeholder { color: rgb(255 248 241 / .5); }
+  .foot__field input:focus { outline: none; border-color: var(--coral); }
+  .foot__ok { color: var(--butter); font-size: 26px; margin: 0; }
+  .foot__cols { display: flex; gap: clamp(32px, 6vw, 88px); flex-wrap: wrap; }
+  .foot__t { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: rgb(255 248 241 / .5); margin: 0 0 14px; }
+  .foot__cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .foot__cols a { font-weight: 500; transition: color .2s; }
+  .foot__cols a:hover { color: var(--coral); }
+  .foot__legal { display: flex; justify-content: space-between; gap: 8px 24px; flex-wrap: wrap; margin-top: 56px; font-size: 14px; color: rgb(255 248 241 / .6); }
+  .foot__legal p { margin: 0; }
+  .foot__giant { position: relative; margin-top: clamp(40px, 6vw, 80px); height: clamp(150px, 26vw, 380px); }
+  .foot__word {
+    position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 24%);
+    font: italic 600 clamp(112px, 35vw, 540px)/.8 var(--f-display); letter-spacing: -.05em; color: var(--cream); white-space: nowrap;
+  }
+  .foot__draco { position: absolute; right: clamp(4%, 12vw, 16%); bottom: clamp(44px, 8.6vw, 140px); width: clamp(120px, 21vw, 300px); }
+  .foot__draco img { width: 100%; height: auto; animation: breathe 3.6s ease-in-out infinite; transform-origin: 50% 100%; }
+  @keyframes breathe { 50% { transform: scale(1.025, .985); } }
+  .foot__shh { position: absolute; right: 100%; top: 46%; white-space: nowrap; color: var(--butter); font-size: clamp(18px, 2vw, 28px); transform: rotate(4deg); }
+  .foot__z { position: absolute; right: 18%; top: 4%; font: italic 700 26px var(--f-display); color: var(--lilac); opacity: 0; animation: zz 3.6s ease-in infinite; }
+  .foot__z:nth-of-type(2) { animation-delay: 1.2s; font-size: 32px; }
+  .foot__z:nth-of-type(3) { animation-delay: 2.4s; font-size: 40px; }
+  @keyframes zz { 0% { opacity: 0; transform: translate(0, 10px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(30px, -60px); } }
+  @media (max-width: 720px) {
+    .foot__giant { margin-top: 72px; }
+    .foot__shh { right: 96%; top: 38%; font-size: 17px; }
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import CartDrawer from '../components/CartDrawer.astro';
+import '../styles/global.css';
+
+interface Props { title?: string; description?: string; footer?: boolean }
+const {
+  title = 'Warmy · Tejidos, amigurumis y peluches hechos a mano',
+  description = 'Amigurumis, mantas y abrigos tejidos a crochet punto por punto en Buenos Aires. Piezas únicas y pedidos a medida.',
+  footer = true,
+} = Astro.props;
+---
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#FFF8F1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500..700&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&display=swap" rel="stylesheet" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a href="#main" class="skip">Saltar al contenido</a>
+    <Nav />
+    <main id="main"><slot /></main>
+    {footer && <Footer />}
+    <CartDrawer transition:persist />
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+    <script>
+      import '../scripts/app';
+    </script>
+    <style is:global>
+      .skip { position: fixed; left: 16px; top: -60px; z-index: 200; background: var(--choco); color: var(--cream); padding: 12px 18px; border-radius: 12px; transition: top .2s; }
+      .skip:focus { top: 16px; }
+      .toast {
+        position: fixed; left: 50%; bottom: 24px; z-index: 120; transform: translate(-50%, 140%);
+        display: flex; align-items: center; gap: 12px; max-width: calc(100% - 32px);
+        padding: 12px 22px 12px 12px; border-radius: 999px; background: var(--choco); color: var(--cream);
+        font-weight: 600; font-size: 15px; box-shadow: 0 20px 40px -20px rgb(46 26 19 / .6);
+        transition: transform .6s var(--spring); pointer-events: none;
+      }
+      .toast.is-on { transform: translate(-50%, 0); }
+      .toast img { width: 40px; height: 40px; border-radius: 50%; background: var(--butter); object-fit: contain; padding: 3px; flex: none; }
+      .flyer { position: fixed; z-index: 130; pointer-events: none; width: 80px; height: 80px; object-fit: cover; border-radius: 50%; background: var(--paper); box-shadow: 0 10px 24px -10px rgb(46 26 19 / .5); }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base title="Página no encontrada · Warmy">
+  <section class="nf wrap">
+    <div class="nf__sky" aria-hidden="true"></div>
+    <div class="nf__copy">
+      <p class="nf__num display" aria-hidden="true"><em>404</em></p>
+      <h1 class="display h2">Draco escondió<br />esta página.</h1>
+      <p class="lead">Seguro la enterró en el jardín junto a un ovillo. Mientras la busca, te dejamos estos atajos:</p>
+      <div class="nf__ctas">
+        <a href="/" class="btn btn--lg"><Icon name="home" /> Volver al inicio</a>
+        <a href="/tienda" class="btn btn--lg btn--ghost">Ver la tienda</a>
+      </div>
+    </div>
+    <div class="nf__art">
+      <img src="/draco/draco-sentado.webp" alt="Draco sentado, con cara de no saber nada" width="720" height="711" />
+      <span class="tag nf__q">¿qué página? 👀</span>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); align-items: center; gap: 32px; padding-block: 20px clamp(80px, 9vw, 120px); min-height: 70vh; }
+  .nf__sky { position: absolute; right: -6%; top: 0; width: min(720px, 80vw); aspect-ratio: 1; border-radius: 50%; background: var(--cielo); opacity: .65; z-index: -1; }
+  .nf__num { font-size: clamp(140px, 22vw, 340px); line-height: .85; letter-spacing: -.06em; margin: 0; }
+  .nf__num em { display: inline-block; animation: nfIn 1s var(--ease) both; }
+  @keyframes nfIn { from { opacity: 0; transform: translateY(40px); } }
+  .nf h1 { margin: 12px 0 18px; }
+  .nf__ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  .nf__art { position: relative; justify-self: center; width: min(520px, 100%); }
+  .nf__art img { width: 100%; height: auto; transform-origin: 50% 90%; animation: tilt 3.4s ease-in-out infinite; }
+  @keyframes tilt { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(4deg); } }
+  .nf__q { position: absolute; right: 2%; top: 10%; transform: rotate(6deg); font-size: 15px; }
+  @media (max-width: 860px) { .nf { grid-template-columns: 1fr; } .nf__art { width: min(360px, 90%); order: -1; } }
+</style>

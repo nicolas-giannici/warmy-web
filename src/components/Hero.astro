@@ -1,0 +1,131 @@
+---
+import Icon from './Icon.astro';
+const letters = 'warmy'.split('');
+---
+<section class="hero" data-hero>
+  <div class="hero__sky" aria-hidden="true"></div>
+  <div class="hero__butter" aria-hidden="true"></div>
+
+  <div class="wrap hero__top">
+    <p class="hero__kicker">Tejidos · Amigurumis · Peluches · Crochet</p>
+    <p class="hand hero__fio">hola, soy Fio y tejo cada pieza a mano</p>
+  </div>
+
+  <div class="hero__stage">
+    <h1 class="hero__word" aria-label="Warmy">
+      <span class="hero__letters" aria-hidden="true">
+        {letters.map((l, i) => <span class="hero__l" style={`--i:${i}`}>{l}</span>)}
+      </span>
+      <span class="hero__draco" data-draco>
+        <img src="/draco/draco-asomado.webp" alt="Draco, el bulldog francés de Warmy, asomado sobre las letras" width="713" height="720" fetchpriority="high" />
+      </span>
+      <span class="hero__guau hand" aria-hidden="true">¡guau! soy Draco,<br />el control de calidad ♡
+        <svg viewBox="0 0 60 40" width="56" height="38"><path d="M60 2 Q30 6 4 36 M4 36 L18 30 M4 36 L8 22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" /></svg>
+      </span>
+      <span class="sticker hero__sticker" aria-hidden="true"><small>HECHO A MANO</small><strong>en Buenos Aires</strong></span>
+    </h1>
+    <svg class="hero__thread" viewBox="0 0 1240 220" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 120 C160 40 260 200 420 130 S700 20 860 120 S1080 210 1240 140" pathLength="1" />
+    </svg>
+    <img class="hero__yarn" src="/ilus/ovillo.svg" alt="" width="176" height="176" aria-hidden="true" />
+    <span class="tag hero__unique">✶ cada pieza es única</span>
+  </div>
+
+  <div class="wrap hero__bottom">
+    <div class="hero__copy">
+      <p>Amigurumis, mantas y abrigos tejidos punto por punto, para regalar (o regalarte) algo que dure toda la vida.</p>
+      <div class="hero__ctas">
+        <a href="/tienda" class="btn btn--lg">Ver la tienda <Icon name="arrow-up-right" /></a>
+        <a href="/#a-medida" class="btn btn--lg btn--ghost">Pedí el tuyo a medida</a>
+      </div>
+    </div>
+    <div class="hero__side">
+      <p class="hero__slots"><i></i>3 cupos libres para pedidos de diciembre</p>
+      <a href="#historia" class="hero__scroll">scroll <Icon name="arrow-down" size={16} /></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; overflow: clip; padding-block: clamp(12px, 3vw, 40px) clamp(48px, 6vw, 88px); margin-top: -96px; padding-top: 120px; }
+  .hero__sky { position: absolute; width: min(820px, 90vw); aspect-ratio: 1; right: -8vw; top: 0; border-radius: 50%; background: var(--cielo); opacity: .55; filter: blur(2px); animation: drift 14s ease-in-out infinite alternate; }
+  .hero__butter { position: absolute; width: min(600px, 80vw); aspect-ratio: 1; left: -260px; bottom: -260px; border-radius: 50%; background: var(--butter); opacity: .45; }
+  @keyframes drift { to { transform: translate(-40px, 30px) scale(1.05); } }
+
+  .hero__top { position: relative; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .hero__kicker { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--cocoa); }
+  .hero__fio { margin: 0; font-size: clamp(22px, 2.3vw, 34px); transform: rotate(-2deg); }
+
+  .hero__stage { position: relative; margin-top: clamp(40px, 7vw, 110px); }
+  .hero__word { position: relative; width: max-content; max-width: 100%; margin: 0 auto; font: italic 600 clamp(116px, 30.5vw, 440px)/.9 var(--f-display); letter-spacing: -.05em; color: var(--choco); }
+  .hero__letters { position: relative; z-index: 1; display: block; padding-inline: .06em; }
+  .hero__l { display: inline-block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__l { animation: letter 1.1s var(--ease) both; animation-delay: calc(var(--i) * 80ms + 150ms); }
+    .hero__draco img { animation: peek 1.1s var(--spring) .85s both; }
+    .hero__thread path { animation: draw 2.2s var(--ease) .5s both; }
+    .hero__sticker { animation: pop .9s var(--spring) 1.1s both; }
+    .hero__guau { animation: fadeUp .8s var(--ease) 1.6s both; }
+  }
+  @keyframes letter { from { opacity: 0; transform: translateY(.35em) rotate(6deg); filter: blur(10px); } }
+  @keyframes peek { from { transform: translateY(70%); opacity: 0; } 40% { opacity: 1; } }
+  @keyframes draw { from { stroke-dashoffset: 1; } }
+  @keyframes pop { from { transform: scale(0) rotate(-40deg); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } }
+
+  /* Draco se asoma sobre la m: posición relativa al tamaño del wordmark */
+  .hero__draco { position: absolute; z-index: 2; left: 51%; bottom: 53%; width: 30%; pointer-events: none; }
+  .hero__draco img { width: 100%; height: auto; transform-origin: 50% 100%; }
+  .hero__draco { transition: transform .6s var(--ease); transform: rotate(var(--tilt, 0deg)); transform-origin: 50% 100%; }
+  .hero__guau { position: absolute; left: 84%; bottom: 82%; width: max-content; font-size: clamp(16px, 2.2vw, 32px); line-height: 1; color: var(--lilac-deep); transform: rotate(-4deg); letter-spacing: 0; font-style: normal; }
+  .hero__guau svg { position: absolute; left: -46px; top: 64%; color: var(--lilac-deep); }
+  .hero__sticker { --d: clamp(92px, 11vw, 160px); position: absolute; z-index: 2; left: -2%; top: 6%; transform: rotate(-12deg); font-style: normal; letter-spacing: 0; }
+
+  .hero__thread { position: absolute; left: -2%; width: 88%; height: clamp(80px, 15vw, 220px); top: 72%; overflow: visible; }
+  .hero__thread path { fill: none; stroke: var(--choco); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; vector-effect: non-scaling-stroke; }
+  .hero__yarn { position: absolute; right: 4%; top: 88%; width: clamp(64px, 10vw, 150px); height: auto; animation: roll 9s linear infinite; }
+  @keyframes roll { to { transform: rotate(360deg); } }
+  .hero__unique { position: absolute; left: 38%; top: 96%; background: var(--lilac-deep); color: var(--cream); transform: rotate(-6deg); }
+
+  .hero__bottom { position: relative; display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; margin-top: clamp(80px, 11vw, 150px); }
+  .hero__copy { max-width: 520px; }
+  .hero__copy p { margin: 0 0 26px; font-size: clamp(18px, 1.55vw, 22px); font-weight: 500; line-height: 1.45; }
+  .hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero__side { display: grid; justify-items: end; gap: 20px; }
+  .hero__slots { margin: 0; display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 999px; background: var(--white); font-size: 15px; font-weight: 600; }
+  .hero__slots i { width: 10px; height: 10px; border-radius: 50%; background: #3FB16B; box-shadow: 0 0 0 0 rgb(63 177 107 / .5); animation: ping 2s infinite; }
+  @keyframes ping { 70% { box-shadow: 0 0 0 10px rgb(63 177 107 / 0); } }
+  .hero__scroll { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 600; letter-spacing: .2em; color: var(--cocoa); }
+
+  @media (max-width: 760px) {
+    .hero { padding-top: 104px; }
+    .hero__top { flex-direction: column; align-items: flex-start; }
+    .hero__kicker { font-size: 11px; letter-spacing: .16em; }
+    .hero__stage { margin-top: 90px; }
+    .hero__guau { left: auto; right: 51%; bottom: auto; top: -38%; font-size: 17px; text-align: right; }
+    .hero__guau svg { display: none; }
+    .hero__sticker { top: auto; bottom: -70%; left: auto; right: 2%; transform: rotate(10deg); }
+    .hero__unique { left: 6%; top: 104%; }
+    .hero__yarn { display: none; }
+    .hero__bottom { margin-top: 130px; }
+    .hero__ctas .btn { flex: 1 1 100%; }
+    .hero__side { justify-items: start; }
+    .hero__slots { font-size: 13px; }
+  }
+</style>
+
+<script>
+  // Draco inclina la cabeza siguiendo al mouse (solo punteros finos).
+  function init() {
+    const d = document.querySelector('[data-draco]') as HTMLElement | null;
+    if (!d || !matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const onMove = (e: PointerEvent) => {
+      const r = d.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) / innerWidth;
+      d.style.setProperty('--tilt', (dx * 10).toFixed(2) + 'deg');
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    document.addEventListener('astro:before-swap', () => window.removeEventListener('pointermove', onMove), { once: true });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

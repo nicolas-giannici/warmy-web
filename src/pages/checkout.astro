@@ -1,0 +1,227 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+const ship = [
+  { id: 'andreani', t: 'Andreani a domicilio', s: 'Llega en 2–4 días hábiles', p: 4900, icon: 'truck' },
+  { id: 'correo', t: 'Correo Argentino · sucursal', s: 'Llega en 3–6 días hábiles', p: 3600, icon: 'package' },
+  { id: 'retiro', t: 'Retiro en el taller', s: 'Palermo, CABA · coordinamos por WhatsApp', p: 0, icon: 'pin' },
+];
+---
+<Base title="Checkout · Warmy" footer={false}>
+  <section class="wrap co" data-checkout>
+    <header class="co__head">
+      <ol class="co__steps" aria-label="Pasos">
+        <li class="is-done"><span><Icon name="check" size={14} /></span>Bolsa</li>
+        <li class="is-on" aria-current="step"><span>2</span>Datos y envío</li>
+        <li><span>3</span>Pago</li>
+      </ol>
+      <p class="co__secure"><Icon name="lock" size={16} /> Compra segura</p>
+    </header>
+
+    <div class="co__grid">
+      <form class="co__form" data-form novalidate>
+        <fieldset>
+          <legend><span>1</span> Tus datos</legend>
+          <div class="co__row">
+            <label class="field"><span>Email</span><input type="email" name="email" required autocomplete="email" placeholder="tu@email.com" /></label>
+            <label class="field"><span>WhatsApp</span><input type="tel" name="tel" required autocomplete="tel" placeholder="+54 9 11 ····" /></label>
+          </div>
+          <div class="co__row">
+            <label class="field"><span>Nombre</span><input name="nombre" required autocomplete="given-name" /></label>
+            <label class="field"><span>Apellido</span><input name="apellido" required autocomplete="family-name" /></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>2</span> Envío</legend>
+          <div class="co__opts">
+            {ship.map((o, i) => (
+              <label class="opt">
+                <input type="radio" name="envio" value={o.id} data-ship-cost={o.p} checked={i === 0} />
+                <span class="opt__dot" aria-hidden="true"></span>
+                <Icon name={o.icon} size={22} />
+                <span class="opt__txt"><b>{o.t}</b><small>{o.s}</small></span>
+                <span class="opt__p">{o.p ? '$' + o.p.toLocaleString('es-AR') : 'Gratis'}</span>
+              </label>
+            ))}
+          </div>
+          <div class="co__row" data-address>
+            <label class="field field--grow"><span>Dirección</span><input name="dir" autocomplete="street-address" placeholder="Calle y número" /></label>
+            <label class="field field--sm"><span>CP</span><input name="cp" inputmode="numeric" autocomplete="postal-code" /></label>
+          </div>
+        </fieldset>
+
+        <label class="co__gift">
+          <img src="/ilus/regalo.svg" alt="" width="216" height="206" />
+          <span><b>Envolver para regalo</b><small>Caja, moño y tarjeta escrita a mano por Fio · + $1.500</small></span>
+          <input type="checkbox" data-gift />
+          <span class="switch" aria-hidden="true"></span>
+        </label>
+
+        <fieldset>
+          <legend><span>3</span> Pago</legend>
+          <div class="co__opts">
+            <label class="opt"><input type="radio" name="pago" value="mp" checked /><span class="opt__dot" aria-hidden="true"></span><Icon name="wallet" size={22} /><span class="opt__txt"><b>Mercado Pago</b><small>Tarjetas, débito o dinero en cuenta · hasta 3 cuotas sin interés</small></span><span></span></label>
+            <label class="opt"><input type="radio" name="pago" value="transfer" data-off="0.1" /><span class="opt__dot" aria-hidden="true"></span><Icon name="bank" size={22} /><span class="opt__txt"><b>Transferencia bancaria</b><small>10% de descuento · te enviamos el CBU por mail</small></span><span class="opt__p">-10%</span></label>
+          </div>
+        </fieldset>
+
+        <button class="btn btn--lg btn--block" type="submit"><Icon name="lock" /> <span data-pay-label>Pagar con Mercado Pago</span><span class="co__paytotal">· <span data-pay-total>$0</span></span></button>
+        <p class="co__msg hand" data-msg hidden></p>
+      </form>
+
+      <aside class="co__sum">
+        <h2 class="display"><em>Tu pedido</em></h2>
+        <ul class="co__items" data-items></ul>
+        <p class="co__empty" data-sum-empty hidden>Tu bolsa está vacía. <a href="/tienda">Ver la tienda</a></p>
+        <hr class="stitches stitches--soft" />
+        <dl class="co__totals">
+          <div><dt>Subtotal</dt><dd data-sub>$0</dd></div>
+          <div><dt>Envío</dt><dd data-ship>$0</dd></div>
+          <div data-gift-row hidden><dt>Regalo</dt><dd>$1.500</dd></div>
+          <div data-off-row hidden><dt>Descuento transferencia</dt><dd data-off>-$0</dd></div>
+          <div class="co__total"><dt class="display">Total</dt><dd class="display" data-total>$0</dd></div>
+        </dl>
+        <div class="co__thanks">
+          <img src="/draco/draco-saludando.webp" alt="Draco saludando" width="642" height="720" loading="lazy" />
+          <p class="hand">¡Gracias por elegir algo hecho a mano!</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .co { padding-block: 20px clamp(80px, 9vw, 120px); }
+  .co__head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: clamp(32px, 4vw, 56px); }
+  .co__steps { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(14px, 3vw, 32px); flex-wrap: wrap; }
+  .co__steps li { display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--cocoa); font-size: 15px; }
+  .co__steps li > span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--line); font-size: 13px; font-weight: 700; }
+  .co__steps .is-done > span { background: var(--sage); border-color: var(--sage); color: var(--choco); }
+  .co__steps .is-on { color: var(--choco); font-weight: 700; }
+  .co__steps .is-on > span { background: var(--choco); border-color: var(--choco); color: var(--cream); }
+  .co__secure { margin: 0; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--cocoa); }
+  .co__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 460px); gap: clamp(32px, 6vw, 92px); align-items: start; }
+  .co__form { display: grid; gap: 44px; }
+  fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 18px; min-width: 0; }
+  legend { display: flex; align-items: center; gap: 14px; font: 500 clamp(28px, 2.6vw, 34px)/1 var(--f-display); letter-spacing: -.02em; margin-bottom: 18px; padding: 0; }
+  legend span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--choco); color: var(--cream); font: 700 14px var(--f-body); }
+  .co__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; }
+  .co__row[data-address] { grid-template-columns: minmax(0, 1fr) 160px; }
+  .co__row[data-address][hidden] { display: none; }
+  .field { display: grid; gap: 8px; }
+  .field > span { font-size: 12.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--cocoa); }
+  .field input { min-height: 54px; padding: 0 18px; border-radius: 16px; border: 1.5px solid var(--line); background: var(--white); width: 100%; min-width: 0; }
+  .field input:focus { outline: none; border-color: var(--lilac-deep); box-shadow: 0 0 0 3px rgb(126 91 194 / .2); }
+  .field input[aria-invalid="true"] { border-color: var(--rose); }
+  .co__opts { display: grid; gap: 12px; }
+  .opt { display: grid; grid-template-columns: 24px 24px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 18px 22px; border-radius: 20px; border: 1.5px solid var(--line); cursor: pointer; transition: border-color .25s, background .25s; }
+  .opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .opt__dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--choco); display: grid; place-items: center; }
+  .opt__dot::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--choco); transform: scale(0); transition: transform .35s var(--spring); }
+  .opt:has(input:checked) { border-color: var(--choco); border-width: 2px; background: var(--white); }
+  .opt:has(input:checked) .opt__dot::after { transform: scale(1); }
+  .opt:has(input:focus-visible) { outline: 3px solid var(--lilac-deep); outline-offset: 2px; }
+  .opt :global(svg) { color: var(--lilac-deep); }
+  .opt__txt { display: grid; }
+  .opt__txt small { color: var(--cocoa); font-size: 14px; }
+  .opt__p { font-weight: 700; white-space: nowrap; }
+  .co__gift { display: flex; align-items: center; gap: 18px; padding: 14px 22px 14px 14px; border-radius: 24px; background: var(--paper); cursor: pointer; position: relative; }
+  .co__gift img { width: 84px; height: 84px; padding: 10px; border-radius: 18px; background: var(--blush); flex: none; }
+  .co__gift > span:nth-of-type(1) { flex: 1; display: grid; }
+  .co__gift small { color: var(--cocoa); font-size: 14px; }
+  .co__gift input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .switch { width: 50px; height: 28px; border-radius: 999px; background: var(--line); position: relative; transition: background .3s; flex: none; }
+  .switch::after { content: ""; position: absolute; left: 2px; top: 2px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: transform .45s var(--spring); }
+  .co__gift input:checked + .switch { background: var(--lilac-deep); }
+  .co__gift input:checked + .switch::after { transform: translateX(22px); }
+  .co__gift input:focus-visible + .switch { outline: 3px solid var(--lilac-deep); outline-offset: 3px; }
+  .co__msg { font-size: 26px; margin: 0; text-align: center; }
+  .co__paytotal { white-space: nowrap; }
+
+  .co__sum { position: sticky; top: 100px; display: grid; gap: 20px; padding: clamp(24px, 3vw, 40px); border-radius: 32px; background: var(--paper); }
+  .co__sum h2 { font-size: 40px; }
+  .co__items { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .co__items li { display: grid; grid-template-columns: 80px minmax(0, 1fr) auto; gap: 14px; align-items: center; }
+  .co__items .im { width: 80px; height: 80px; border-radius: 18px; display: grid; place-items: center; }
+  .co__items .im { overflow: hidden; }
+  .co__items .im img { height: 76%; width: auto; }
+  .co__items .im img.is-cover { width: 100%; height: 100%; object-fit: cover; }
+  .co__items b { font: 500 20px/1.1 var(--f-display); display: block; }
+  .co__items small { color: var(--cocoa); font-size: 13px; }
+  .co__items .pr { font-weight: 700; white-space: nowrap; }
+  .co__empty { margin: 0; color: var(--cocoa); }
+  .co__empty a { font-weight: 700; text-decoration: underline; }
+  .co__totals { margin: 0; display: grid; gap: 10px; }
+  .co__totals div { display: flex; justify-content: space-between; gap: 12px; }
+  .co__totals div[hidden] { display: none; }
+  .co__totals dt { color: var(--cocoa); }
+  .co__totals dd { margin: 0; font-weight: 600; }
+  .co__total { align-items: baseline; margin-top: 8px; }
+  .co__total dt { font-size: 32px; color: var(--choco); }
+  .co__total dd { font-size: 40px; font-weight: 600; }
+  .co__thanks { display: flex; align-items: center; gap: 12px; }
+  .co__thanks img { width: 84px; height: auto; flex: none; transform-origin: 70% 90%; animation: wave 2s var(--ease) 1s 2; }
+  .co__thanks p { margin: 0; font-size: 26px; }
+  @keyframes wave { 25% { transform: rotate(-6deg); } 50% { transform: rotate(4deg); } 75% { transform: rotate(-3deg); } }
+  @media (max-width: 1000px) { .co__grid { grid-template-columns: 1fr; } .co__sum { position: static; order: -1; } }
+  @media (max-width: 600px) {
+    .co__row, .co__row[data-address] { grid-template-columns: 1fr; }
+    .opt { grid-template-columns: 24px minmax(0, 1fr) auto; padding: 16px; gap: 12px; }
+    .opt > :global(svg) { display: none; }
+    .co__gift img { width: 64px; height: 64px; }
+  }
+</style>
+
+<script>
+  function init() {
+    const root = document.querySelector<HTMLElement>('[data-checkout]');
+    if (!root) return;
+    const cat = JSON.parse(document.getElementById('catalog-data')?.textContent || '{}');
+    const money = (n: number) => (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('es-AR');
+    const form = root.querySelector<HTMLFormElement>('[data-form]')!;
+    const render = () => {
+      let cart: { slug: string; qty: number; variant?: string; extra?: number }[] = [];
+      try { cart = JSON.parse(localStorage.getItem('warmy-cart') || '[]').filter((l: any) => cat[l.slug]); } catch {}
+      root.querySelector('[data-items]')!.innerHTML = cart.map((l) => {
+        const p = cat[l.slug];
+        return `<li><span class="im" style="background:${p.bg}"><img src="${p.img}" alt=""${p.cover ? ' class="is-cover"' : ''}></span><span><b>${p.name}</b><small>${l.variant || 'Como en la foto'} · x${l.qty}</small></span><span class="pr">${money((p.price + (l.extra || 0)) * l.qty)}</span></li>`;
+      }).join('');
+      (root.querySelector('[data-sum-empty]') as HTMLElement).hidden = cart.length > 0;
+      const sub = cart.reduce((s, l) => s + (cat[l.slug].price + (l.extra || 0)) * l.qty, 0);
+      const shipEl = form.querySelector<HTMLInputElement>('input[name=envio]:checked')!;
+      const ship = sub === 0 || sub >= 60000 ? 0 : Number(shipEl.dataset.shipCost);
+      const gift = form.querySelector<HTMLInputElement>('[data-gift]')!.checked ? 1500 : 0;
+      const payEl = form.querySelector<HTMLInputElement>('input[name=pago]:checked')!;
+      const off = payEl.value === 'transfer' ? Math.round(sub * 0.1) : 0;
+      const total = sub + ship + gift - off;
+      root.querySelector('[data-sub]')!.textContent = money(sub);
+      root.querySelector('[data-ship]')!.textContent = ship ? money(ship) : 'Gratis';
+      (root.querySelector('[data-gift-row]') as HTMLElement).hidden = !gift;
+      (root.querySelector('[data-off-row]') as HTMLElement).hidden = !off;
+      root.querySelector('[data-off]')!.textContent = money(-off);
+      root.querySelector('[data-total]')!.textContent = money(total);
+      root.querySelector('[data-pay-total]')!.textContent = money(total);
+      root.querySelector('[data-pay-label]')!.textContent = payEl.value === 'transfer' ? 'Confirmar pedido' : 'Pagar con Mercado Pago';
+      (root.querySelector('[data-address]') as HTMLElement).hidden = shipEl.value === 'retiro';
+    };
+    form.addEventListener('change', render);
+    document.addEventListener('cart:change', render);
+    // con ClientRouter el document persiste: soltamos el listener al salir de la página
+    document.addEventListener('astro:before-swap', () => document.removeEventListener('cart:change', render), { once: true });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let ok = true;
+      form.querySelectorAll<HTMLInputElement>('input[required]').forEach((i) => {
+        const bad = !i.value.trim() || (i.type === 'email' && !/^\S+@\S+\.\S+$/.test(i.value));
+        i.setAttribute('aria-invalid', String(bad)); if (bad && ok) { i.focus(); ok = false; }
+      });
+      const msg = root.querySelector<HTMLElement>('[data-msg]')!;
+      msg.hidden = false;
+      const empty = !(root.querySelector('[data-items]')?.children.length);
+      msg.textContent = ok && empty ? 'Tu bolsa está vacía: sumá algo de la tienda ♡' : ok ? 'Acá se abre Mercado Pago Checkout Pro (falta conectar el backend).' : 'Completá los datos marcados ♡';
+    });
+    render();
+  }
+  document.addEventListener('astro:page-load', init);
+</script>
