@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 const ship = [
@@ -52,7 +53,7 @@ const ship = [
         </fieldset>
 
         <label class="co__gift">
-          <img src="/ilus/regalo.svg" alt="" width="216" height="206" />
+          <img src={u('/ilus/regalo.svg')} alt="" width="216" height="206" />
           <span><b>Envolver para regalo</b><small>Caja, moño y tarjeta escrita a mano por Fio · + $1.500</small></span>
           <input type="checkbox" data-gift />
           <span class="switch" aria-hidden="true"></span>
@@ -73,7 +74,7 @@ const ship = [
       <aside class="co__sum">
         <h2 class="display"><em>Tu pedido</em></h2>
         <ul class="co__items" data-items></ul>
-        <p class="co__empty" data-sum-empty hidden>Tu bolsa está vacía. <a href="/tienda">Ver la tienda</a></p>
+        <p class="co__empty" data-sum-empty hidden>Tu bolsa está vacía. <a href={u('/tienda')}>Ver la tienda</a></p>
         <hr class="stitches stitches--soft" />
         <dl class="co__totals">
           <div><dt>Subtotal</dt><dd data-sub>$0</dd></div>
@@ -83,7 +84,7 @@ const ship = [
           <div class="co__total"><dt class="display">Total</dt><dd class="display" data-total>$0</dd></div>
         </dl>
         <div class="co__thanks">
-          <img src="/draco/draco-saludando.webp" alt="Draco saludando" width="642" height="720" loading="lazy" />
+          <img src={u('/draco/draco-saludando.webp')} alt="Draco saludando" width="642" height="720" loading="lazy" />
           <p class="hand">¡Gracias por elegir algo hecho a mano!</p>
         </div>
       </aside>

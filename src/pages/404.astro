@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 ---
@@ -10,12 +11,12 @@ import Icon from '../components/Icon.astro';
       <h1 class="display h2">Draco escondió<br />esta página.</h1>
       <p class="lead">Seguro la enterró en el jardín junto a un ovillo. Mientras la busca, te dejamos estos atajos:</p>
       <div class="nf__ctas">
-        <a href="/" class="btn btn--lg"><Icon name="home" /> Volver al inicio</a>
-        <a href="/tienda" class="btn btn--lg btn--ghost">Ver la tienda</a>
+        <a href={u('/')} class="btn btn--lg"><Icon name="home" /> Volver al inicio</a>
+        <a href={u('/tienda')} class="btn btn--lg btn--ghost">Ver la tienda</a>
       </div>
     </div>
     <div class="nf__art">
-      <img src="/draco/draco-sentado.webp" alt="Draco sentado, con cara de no saber nada" width="720" height="711" />
+      <img src={u('/draco/draco-sentado.webp')} alt="Draco sentado, con cara de no saber nada" width="720" height="711" />
       <span class="tag nf__q">¿qué página? 👀</span>
     </div>
   </section>

@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Icon from './Icon.astro';
 const letters = 'warmy'.split('');
 ---
@@ -17,7 +18,7 @@ const letters = 'warmy'.split('');
         {letters.map((l, i) => <span class="hero__l" style={`--i:${i}`}>{l}</span>)}
       </span>
       <span class="hero__draco" data-draco>
-        <img src="/draco/draco-asomado.webp" alt="Draco, el bulldog francés de Warmy, asomado sobre las letras" width="713" height="720" fetchpriority="high" />
+        <img src={u('/draco/draco-asomado.webp')} alt="Draco, el bulldog francés de Warmy, asomado sobre las letras" width="713" height="720" fetchpriority="high" />
       </span>
       <span class="hero__guau hand" aria-hidden="true">¡guau! soy Draco,<br />el control de calidad ♡
         <svg viewBox="0 0 60 40" width="56" height="38"><path d="M60 2 Q30 6 4 36 M4 36 L18 30 M4 36 L8 22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" /></svg>
@@ -27,7 +28,7 @@ const letters = 'warmy'.split('');
     <svg class="hero__thread" viewBox="0 0 1240 220" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0 120 C160 40 260 200 420 130 S700 20 860 120 S1080 210 1240 140" pathLength="1" />
     </svg>
-    <img class="hero__yarn" src="/ilus/ovillo.svg" alt="" width="176" height="176" aria-hidden="true" />
+    <img class="hero__yarn" src={u('/ilus/ovillo.svg')} alt="" width="176" height="176" aria-hidden="true" />
     <span class="tag hero__unique">✶ cada pieza es única</span>
   </div>
 
@@ -35,8 +36,8 @@ const letters = 'warmy'.split('');
     <div class="hero__copy">
       <p>Amigurumis, mantas y abrigos tejidos punto por punto, para regalar (o regalarte) algo que dure toda la vida.</p>
       <div class="hero__ctas">
-        <a href="/tienda" class="btn btn--lg">Ver la tienda <Icon name="arrow-up-right" /></a>
-        <a href="/#a-medida" class="btn btn--lg btn--ghost">Pedí el tuyo a medida</a>
+        <a href={u('/tienda')} class="btn btn--lg">Ver la tienda <Icon name="arrow-up-right" /></a>
+        <a href={u('/#a-medida')} class="btn btn--lg btn--ghost">Pedí el tuyo a medida</a>
       </div>
     </div>
     <div class="hero__side">

@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Icon from './Icon.astro';
 import { CATEGORIES, PRODUCTS } from '../data/products';
 const count = (c: string) => PRODUCTS.filter((p) => p.cat === c).length;
@@ -9,13 +10,13 @@ const count = (c: string) => PRODUCTS.filter((p) => p.cat === c).length;
       <p class="label" data-reveal><b>(03)</b> Explorá</p>
       <h2 id="cats-title" class="display h2" data-reveal style="--i:1">Todo lo que<br />sale del ovillo</h2>
     </div>
-    <img src="/ilus/ovillo-hilo.svg" alt="" width="276" height="206" class="cats__yarn" data-reveal="scale" />
+    <img src={u('/ilus/ovillo-hilo.svg')} alt="" width="276" height="206" class="cats__yarn" data-reveal="scale" />
   </div>
 
   <ol class="cats__list">
     {CATEGORIES.map((c, i) => (
       <li data-reveal style={`--i:${i}`}>
-        <a href={c.name === 'Personalizados' ? '/#a-medida' : `/tienda?cat=${c.name}`} class="cats__row" data-img={c.img} data-bg={c.bg}>
+        <a href={c.name === 'Personalizados' ? u('/#a-medida') : u(`/tienda?cat=${c.name}`)} class="cats__row" data-img={c.img} data-bg={c.bg}>
           <span class="cats__num">0{i + 1}</span>
           <span class="cats__name">{c.name}</span>
           <span class="cats__blurb">{c.blurb}</span>

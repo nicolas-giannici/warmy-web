@@ -1,18 +1,19 @@
 ---
+import { u } from '../lib/url';
 import Icon from './Icon.astro';
 const path = Astro.url.pathname;
 const links = [
-  { href: '/tienda', label: 'Tienda' },
-  { href: '/#a-medida', label: 'A medida' },
-  { href: '/#proceso', label: 'Proceso' },
-  { href: '/#historia', label: 'Historia' },
-  { href: '/#contacto', label: 'Contacto' },
+  { href: u('/tienda'), label: 'Tienda' },
+  { href: u('/#a-medida'), label: 'A medida' },
+  { href: u('/#proceso'), label: 'Proceso' },
+  { href: u('/#historia'), label: 'Historia' },
+  { href: u('/#contacto'), label: 'Contacto' },
 ];
-const active = (h: string) => (h === '/tienda' && (path.startsWith('/tienda') || path.startsWith('/producto')));
+const active = (h: string) => (h === u('/tienda') && (path.startsWith(u('/tienda')) || path.startsWith(u('/producto'))));
 ---
 <header class="nav" data-nav>
   <div class="nav__in wrap">
-    <a href="/" class="nav__logo" aria-label="Warmy, inicio">
+    <a href={u('/')} class="nav__logo" aria-label="Warmy, inicio">
       <span class="nav__word">warmy</span>
       <span class="nav__tag hand">tejidos con amor</span>
     </a>
@@ -20,7 +21,7 @@ const active = (h: string) => (h === '/tienda' && (path.startsWith('/tienda') ||
       {links.map((l) => <a href={l.href} class:list={['nav__link', { 'is-active': active(l.href) }]}>{l.label}</a>)}
     </nav>
     <div class="nav__actions">
-      <a href="/tienda" class="icon-btn nav__hide-sm" aria-label="Buscar"><Icon name="search" /></a>
+      <a href={u('/tienda')} class="icon-btn nav__hide-sm" aria-label="Buscar"><Icon name="search" /></a>
       <button class="icon-btn nav__hide-sm" aria-label="Favoritos"><Icon name="heart" /></button>
       <button class="nav__bag" data-cart-open aria-label="Abrir bolsa">
         <Icon name="bag" size={18} />
@@ -36,7 +37,7 @@ const active = (h: string) => (h === '/tienda' && (path.startsWith('/tienda') ||
 
 <div class="menu" id="menu" data-menu hidden>
   <div class="menu__top wrap">
-    <a href="/" class="nav__word" style="color:var(--cream)">warmy</a>
+    <a href={u('/')} class="nav__word" style="color:var(--cream)">warmy</a>
     <button class="icon-btn menu__close" data-menu-close aria-label="Cerrar menú"><Icon name="x" /></button>
   </div>
   <nav class="menu__links wrap" aria-label="Menú móvil">
@@ -47,7 +48,7 @@ const active = (h: string) => (h === '/tienda' && (path.startsWith('/tienda') ||
       <a href="https://instagram.com/warmy_acrochet" target="_blank" rel="noopener">@warmy_acrochet</a>
       <p>Hecho a mano en Buenos Aires</p>
     </div>
-    <img src="/draco/draco-saludando.webp" alt="Draco, el bulldog francés de Warmy, saludando" width="642" height="720" class="menu__draco" loading="lazy" />
+    <img src={u('/draco/draco-saludando.webp')} alt="Draco, el bulldog francés de Warmy, saludando" width="642" height="720" class="menu__draco" loading="lazy" />
   </div>
 </div>
 

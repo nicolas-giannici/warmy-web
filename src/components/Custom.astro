@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Icon from './Icon.astro';
 import conejita from './conejita-config.svg.txt?raw';
 import osito from './osito-config.svg.txt?raw';
@@ -22,8 +23,8 @@ const sizes = [{ n: '20 cm', k: 0.8 }, { n: '30 cm', k: 1 }, { n: '40 cm', k: 1.
       <div class="custom__figure" data-figure style="--body:#BFDCC6;--inner:#F7E3A6;--bow:#7E5BC2">
         <div class="custom__svg is-on" data-model="conejita" set:html={conejita} />
         <div class="custom__svg" data-model="osito" set:html={osito} />
-        <img class="custom__svg" data-model="unicornio" src="/ilus/unicornio.svg" alt="" width="216" height="326" />
-        <img class="custom__svg" data-model="muneca" src="/ilus/muneca_pedido.svg" alt="" width="216" height="336" />
+        <img class="custom__svg" data-model="unicornio" src={u('/ilus/unicornio.svg')} alt="" width="216" height="326" />
+        <img class="custom__svg" data-model="muneca" src={u('/ilus/muneca_pedido.svg')} alt="" width="216" height="336" />
       </div>
       <span class="custom__name hand" data-name-tag>Olivia</span>
       <span class="tag custom__t1" data-color-tag>Verde salvia</span>

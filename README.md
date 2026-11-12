@@ -10,6 +10,11 @@ npm run dev      # http://localhost:4321
 npm run build    # genera dist/ (sitio estático)
 ```
 
+## Publicación
+Cada push a `main` publica el sitio en GitHub Pages (workflow `.github/workflows/deploy.yml`):
+https://nicolas-giannici.github.io/warmy-web/ — por eso `astro.config.mjs` tiene `base: '/warmy-web'`.
+Usá `u('/ruta')` (`src/lib/url.ts`) para cualquier link o imagen interna; en scripts del navegador, `import.meta.env.BASE_URL`.
+
 ## Estructura
 - `src/data/products.ts`: catálogo, categorías, precios (placeholders), WhatsApp y umbral de envío gratis.
 - `src/layouts/Base.astro`: `<head>`, fuentes, nav, footer, drawer del carrito, toast, View Transitions.

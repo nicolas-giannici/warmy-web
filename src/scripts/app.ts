@@ -3,6 +3,7 @@ type Line = { slug: string; qty: number; variant?: string; extra?: number };
 type Cat = Record<string, { name: string; price: number; img: string; bg: string; cover?: boolean }>;
 
 const KEY = 'warmy-cart';
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, ''); // '/warmy-web' en GitHub Pages
 const FREE = 60000;
 const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const money = (n: number) => '$' + n.toLocaleString('es-AR');
@@ -49,7 +50,7 @@ function renderCart() {
   list.innerHTML = c.map((l, i) => {
     const p = cat[l.slug];
     return `<li class="line" data-i="${i}">
-      <a href="/producto/${l.slug}" class="line__img" style="background:${p.bg}"><img src="${p.img}" alt="" width="60" height="80"${p.cover ? ' class="is-cover"' : ''}></a>
+      <a href="${BASE}/producto/${l.slug}" class="line__img" style="background:${p.bg}"><img src="${p.img}" alt="" width="60" height="80"${p.cover ? ' class="is-cover"' : ''}></a>
       <div><p class="line__name">${p.name}</p><p class="line__var">${l.variant || 'Como en la foto'}</p>
         <div class="line__ctrl"><div class="qty"><button data-q="-1" aria-label="Restar uno">${ICON.minus}</button><output>${l.qty}</output><button data-q="1" aria-label="Sumar uno">${ICON.plus}</button></div>
         <button class="line__rm" data-rm>Quitar</button></div></div>
@@ -150,7 +151,7 @@ let toastT = 0;
 export function toast(msg: string, img?: string) {
   const el = $('[data-toast]');
   if (!el) return;
-  el.innerHTML = `<img src="${img || '/draco/draco-sentado.webp'}" alt="">${msg}`;
+  el.innerHTML = `<img src="${img || BASE + '/draco/draco-sentado.webp'}" alt="">${msg}`;
   el.classList.add('is-on');
   clearTimeout(toastT);
   toastT = window.setTimeout(() => el.classList.remove('is-on'), 2600);

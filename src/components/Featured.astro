@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Icon from './Icon.astro';
 import { PRODUCTS, priceLabel } from '../data/products';
 const items = ['conejita-lila', 'unicornio-arcoiris', 'almohadon-corazon', 'muneca-trenzas', 'manta-nube', 'top-margarita']
@@ -23,7 +24,7 @@ const items = ['conejita-lila', 'unicornio-arcoiris', 'almohadon-corazon', 'mune
   <ul class="feat__track" data-track tabindex="0" aria-label="Productos destacados">
     {items.map((p, i) => (
       <li class="feat__item">
-        <a href={`/producto/${p.slug}`} class="feat__media" style={`--bg:${p.bg}`} draggable="false">
+        <a href={u(`/producto/${p.slug}`)} class="feat__media" style={`--bg:${p.bg}`} draggable="false">
           {p.photo
             ? <img class="feat__photo" src={p.photo} alt={p.name} width="480" height="640" loading="lazy" draggable="false" />
             : <img src={p.img} alt={p.name} width="216" height="326" loading="lazy" draggable="false" />}

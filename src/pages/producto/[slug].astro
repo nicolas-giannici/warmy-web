@@ -1,4 +1,5 @@
 ---
+import { u } from '../../lib/url';
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import Icon from '../../components/Icon.astro';
@@ -15,14 +16,14 @@ const thumbs: Thumb[] = p.photo
       { img: p.photo, bg: p.bg, alt: `${p.name}, foto real`, cover: true },
       ...(p.gallery ?? []).map((g, i) => ({ img: g, bg: p.bg, alt: `${p.name}, foto ${i + 2}`, cover: true })),
       { img: p.img, bg: p.bg, alt: `${p.name}, ilustración` },
-      { img: '/ilus/aguja.svg', bg: 'var(--butter)', alt: 'Tejido a crochet' },
-      { img: '/ilus/regalo.svg', bg: 'var(--sky)', alt: 'Va envuelto para regalo' },
+      { img: u('/ilus/aguja.svg'), bg: 'var(--butter)', alt: 'Tejido a crochet' },
+      { img: u('/ilus/regalo.svg'), bg: 'var(--sky)', alt: 'Va envuelto para regalo' },
     ].slice(0, 4)
   : [
       { img: p.img, bg: p.bg, alt: `${p.name}, de frente` },
       { img: p.img, bg: 'var(--lilac)', alt: `${p.name}, detalle`, zoom: true },
-      { img: '/ilus/aguja.svg', bg: 'var(--butter)', alt: 'Tejido a crochet' },
-      { img: '/ilus/regalo.svg', bg: 'var(--sky)', alt: 'Va envuelto para regalo' },
+      { img: u('/ilus/aguja.svg'), bg: 'var(--butter)', alt: 'Tejido a crochet' },
+      { img: u('/ilus/regalo.svg'), bg: 'var(--sky)', alt: 'Va envuelto para regalo' },
     ];
 const ficha = [
   ['Material', 'Algodón peinado 8/6'], ['Relleno', 'Vellón siliconado hipoalergénico'], ['Medida', p.size],
@@ -32,8 +33,8 @@ const cuotas = money(Math.ceil(p.price / 3));
 ---
 <Base title={`${p.name} · Warmy`} description={p.desc}>
   <nav class="wrap crumbs" aria-label="Migas de pan">
-    <a href="/tienda">Tienda</a><Icon name="chevron-right" size={14} />
-    <a href={`/tienda?cat=${p.cat}`}>{p.cat}</a><Icon name="chevron-right" size={14} />
+    <a href={u('/tienda')}>Tienda</a><Icon name="chevron-right" size={14} />
+    <a href={u(`/tienda?cat=${p.cat}`)}>{p.cat}</a><Icon name="chevron-right" size={14} />
     <span aria-current="page">{p.name}</span>
   </nav>
 
@@ -53,7 +54,7 @@ const cuotas = money(Math.ceil(p.price / 3));
         ))}
       </div>
       <div class="pdp__draco">
-        <span class="pdp__draco-img"><img src="/draco/draco-sentado.webp" alt="Draco" width="720" height="711" loading="lazy" /></span>
+        <span class="pdp__draco-img"><img src={u('/draco/draco-sentado.webp')} alt="Draco" width="720" height="711" loading="lazy" /></span>
         <span>
           <b class="hand">Aprobada por Draco ✓</b>
           <small>Nuestro control de calidad oficial (y probador de almohadones) ya le dio el visto bueno.</small>
@@ -104,7 +105,7 @@ const cuotas = money(Math.ceil(p.price / 3));
         </div>
         <button class="btn btn--lg pdp__add" data-add={p.slug} data-price={p.price}><span>Sumar a la bolsa</span><span class="pdp__add-price" data-total>{money(p.price)}</span></button>
       </div>
-      <a href="/checkout" class="btn btn--lg btn--ghost btn--block" data-buy-now={p.slug}>Comprar ya con <b style="color:var(--lilac-deep);margin-left:4px">Mercado Pago</b></a>
+      <a href={u('/checkout')} class="btn btn--lg btn--ghost btn--block" data-buy-now={p.slug}>Comprar ya con <b style="color:var(--lilac-deep);margin-left:4px">Mercado Pago</b></a>
 
       <ul class="pdp__trust">
         <li><Icon name="truck" size={22} />Envíos a todo el país en 2–5 días</li>
@@ -132,10 +133,10 @@ const cuotas = money(Math.ceil(p.price / 3));
       </div>
       <ol class="making__list">
         {[
-          ['01', 'Elegir el ovillo', '/ilus/ovillo.svg', 'var(--blush)'],
-          ['02', 'Tejer en espiral', '/ilus/aguja.svg', 'var(--butter)'],
+          ['01', 'Elegir el ovillo', u('/ilus/ovillo.svg'), 'var(--blush)'],
+          ['02', 'Tejer en espiral', u('/ilus/aguja.svg'), 'var(--butter)'],
           ['03', 'Rellenar y coser', p.img, 'var(--lilac)'],
-          ['04', 'Envolver con amor', '/ilus/regalo.svg', 'var(--sky)'],
+          ['04', 'Envolver con amor', u('/ilus/regalo.svg'), 'var(--sky)'],
         ].map(([n, t, img, bg], i) => (
           <li data-reveal style={`--i:${i}`}>
             <div class="making__art" style={`background:${bg}`}><img src={img} alt="" width="160" height="160" loading="lazy" /></div>

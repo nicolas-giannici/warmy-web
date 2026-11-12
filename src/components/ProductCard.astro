@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Icon from './Icon.astro';
 import { type Product, priceLabel } from '../data/products';
 const photo = Astro.props.p.photo;
@@ -21,7 +22,7 @@ const { p, showTag = true, i = 0, eager = false } = Astro.props;
   </div>
   <div class="card__info">
     <div>
-      <h3 class="card__name"><a class="card__link" href={`/producto/${p.slug}`}>{p.name}</a></h3>
+      <h3 class="card__name"><a class="card__link" href={u(`/producto/${p.slug}`)}>{p.name}</a></h3>
       <p class="card__meta">{p.cat} · {p.hours} h de tejido</p>
     </div>
     <span class="card__price">{priceLabel(p)}</span>

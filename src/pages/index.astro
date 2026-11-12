@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Featured from '../components/Featured.astro';
@@ -7,20 +8,20 @@ import Custom from '../components/Custom.astro';
 import Icon from '../components/Icon.astro';
 
 const steps = [
-  { n: '01', t: 'Elegís', d: 'Una pieza de la tienda o tu idea a medida, con colores y nombre.', img: '/ilus/ovillo.svg', bg: 'var(--blush)', time: '1 día' },
-  { n: '02', t: 'Fio teje', d: 'Punto por punto, con algodón peinado hipoalergénico y relleno siliconado.', img: '/ilus/aguja.svg', bg: 'var(--butter)', time: '7–20 h' },
-  { n: '03', t: 'Control de Draco', d: 'Draco revisa cada costura y los ojitos de seguridad. Si no la aprueba, no sale del taller.', img: '/draco/draco-sentado.webp', bg: 'var(--lilac)', time: '1 día', draco: true },
-  { n: '04', t: 'Llega envuelto', d: 'En caja de regalo con tarjeta escrita a mano. A todo el país.', img: '/ilus/regalo.svg', bg: 'var(--sky)', time: '2–5 días' },
+  { n: '01', t: 'Elegís', d: 'Una pieza de la tienda o tu idea a medida, con colores y nombre.', img: u('/ilus/ovillo.svg'), bg: 'var(--blush)', time: '1 día' },
+  { n: '02', t: 'Fio teje', d: 'Punto por punto, con algodón peinado hipoalergénico y relleno siliconado.', img: u('/ilus/aguja.svg'), bg: 'var(--butter)', time: '7–20 h' },
+  { n: '03', t: 'Control de Draco', d: 'Draco revisa cada costura y los ojitos de seguridad. Si no la aprueba, no sale del taller.', img: u('/draco/draco-sentado.webp'), bg: 'var(--lilac)', time: '1 día', draco: true },
+  { n: '04', t: 'Llega envuelto', d: 'En caja de regalo con tarjeta escrita a mano. A todo el país.', img: u('/ilus/regalo.svg'), bg: 'var(--sky)', time: '2–5 días' },
 ];
 const reviews = [
-  { q: 'Llegó con una cartita y mi hija no lo suelta ni para dormir.', who: 'Caro · Rosario', img: '/fotos/unicornio-nena.webp', bg: 'var(--blush)', r: -5, photo: true },
-  { q: 'La manta nube es más linda en persona. Suavecita.', who: 'Meli · CABA', img: '/ilus/manta.svg', bg: 'var(--lilac)', r: 4 },
-  { q: 'Le pedí una muñeca igual a mi abuela y lloré.', who: 'Juli · Córdoba', img: '/fotos/muneca-a-pedido-2.webp', bg: 'var(--butter)', r: -2, photo: true },
-  { q: 'Los mitones son lo más abrigado que tengo.', who: 'Sofi · Mendoza', img: '/fotos/mitones.webp', bg: 'var(--sky)', r: 6, photo: true },
+  { q: 'Llegó con una cartita y mi hija no lo suelta ni para dormir.', who: 'Caro · Rosario', img: u('/fotos/unicornio-nena.webp'), bg: 'var(--blush)', r: -5, photo: true },
+  { q: 'La manta nube es más linda en persona. Suavecita.', who: 'Meli · CABA', img: u('/ilus/manta.svg'), bg: 'var(--lilac)', r: 4 },
+  { q: 'Le pedí una muñeca igual a mi abuela y lloré.', who: 'Juli · Córdoba', img: u('/fotos/muneca-a-pedido-2.webp'), bg: 'var(--butter)', r: -2, photo: true },
+  { q: 'Los mitones son lo más abrigado que tengo.', who: 'Sofi · Mendoza', img: u('/fotos/mitones.webp'), bg: 'var(--sky)', r: 6, photo: true },
 ];
 const insta = [
-  { img: '/fotos/conejita-lila.webp' }, { img: '/fotos/logo-draco.webp' }, { img: '/fotos/unicornio-nena.webp' },
-  { img: '/fotos/muneca-a-pedido.webp' }, { img: '/fotos/mitones.webp' }, { img: '/fotos/almohadon-corazon.webp' },
+  { img: u('/fotos/conejita-lila.webp') }, { img: u('/fotos/logo-draco.webp') }, { img: u('/fotos/unicornio-nena.webp') },
+  { img: u('/fotos/muneca-a-pedido.webp') }, { img: u('/fotos/mitones.webp') }, { img: u('/fotos/almohadon-corazon.webp') },
 ];
 ---
 <Base>
@@ -30,9 +31,9 @@ const insta = [
   <section class="mani wrap" id="historia" aria-labelledby="mani-title">
     <p class="label" data-reveal><b>(01)</b> Manifiesto</p>
     <h2 id="mani-title" class="display mani__lines">
-      <span class="mani__line" data-reveal>Cada punto <i class="mani__pill" style="--bg:var(--blush)"><img src="/ilus/conejita.svg" alt="" width="216" height="326" loading="lazy" /></i></span>
-      <span class="mani__line" data-reveal style="--i:1"><i class="mani__pill mani__pill--sm" style="--bg:var(--sky)"><img src="/ilus/corazon.svg" alt="" width="236" height="216" loading="lazy" /></i> <em>tiene nombre,</em></span>
-      <span class="mani__line" data-reveal style="--i:2">y cada muñeco <i class="mani__pill" style="--bg:var(--lilac)"><img src="/ilus/unicornio.svg" alt="" width="216" height="326" loading="lazy" /></i></span>
+      <span class="mani__line" data-reveal>Cada punto <i class="mani__pill" style="--bg:var(--blush)"><img src={u('/ilus/conejita.svg')} alt="" width="216" height="326" loading="lazy" /></i></span>
+      <span class="mani__line" data-reveal style="--i:1"><i class="mani__pill mani__pill--sm" style="--bg:var(--sky)"><img src={u('/ilus/corazon.svg')} alt="" width="236" height="216" loading="lazy" /></i> <em>tiene nombre,</em></span>
+      <span class="mani__line" data-reveal style="--i:2">y cada muñeco <i class="mani__pill" style="--bg:var(--lilac)"><img src={u('/ilus/unicornio.svg')} alt="" width="216" height="326" loading="lazy" /></i></span>
       <span class="mani__line" data-reveal style="--i:3">una dueña. <span class="hand mani__sign">— Fio, tejedora</span></span>
     </h2>
     <div class="mani__foot">

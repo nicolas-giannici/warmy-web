@@ -1,4 +1,5 @@
 ---
+import { u } from '../lib/url';
 import Icon from './Icon.astro';
 import { PRODUCTS } from '../data/products';
 // Datos mínimos para que el script del carrito pinte los ítems sin pedirlos al servidor.
@@ -15,17 +16,17 @@ const catalog = Object.fromEntries(PRODUCTS.map((p) => [p.slug, { name: p.name, 
     <div class="drawer__body">
       <div class="drawer__ship" data-ship>
         <p data-ship-text>Te faltan $60.000 para el envío gratis</p>
-        <div class="drawer__track"><span data-ship-bar></span><img src="/ilus/ovillo.svg" alt="" width="34" height="34" data-ship-ball /></div>
+        <div class="drawer__track"><span data-ship-bar></span><img src={u('/ilus/ovillo.svg')} alt="" width="34" height="34" data-ship-ball /></div>
       </div>
       <ul class="drawer__items" data-cart-items></ul>
 
       <div class="drawer__empty" data-cart-empty>
         <div class="drawer__empty-art">
-          <img src="/draco/draco-ovillo.webp" alt="Draco jugando con un ovillo de lana" width="720" height="716" loading="lazy" />
+          <img src={u('/draco/draco-ovillo.webp')} alt="Draco jugando con un ovillo de lana" width="720" height="716" loading="lazy" />
         </div>
         <p class="display">Tu bolsa está vacía</p>
         <p class="hand">Draco se llevó el ovillo… ¡pero queda mucho más!</p>
-        <a href="/tienda" class="btn" data-cart-close>Ver la tienda <Icon name="arrow-up-right" /></a>
+        <a href={u('/tienda')} class="btn" data-cart-close>Ver la tienda <Icon name="arrow-up-right" /></a>
       </div>
     </div>
 
@@ -35,7 +36,7 @@ const catalog = Object.fromEntries(PRODUCTS.map((p) => [p.slug, { name: p.name, 
         <span><b>Sumar tarjeta escrita a mano</b><em class="hand">la escribe Fio, sin costo ♡</em></span>
       </label>
       <div class="drawer__total"><span>Subtotal</span><strong class="display" data-cart-total>$0</strong></div>
-      <a href="/checkout" class="btn btn--lg btn--block">Ir a pagar <Icon name="arrow-right" /></a>
+      <a href={u('/checkout')} class="btn btn--lg btn--block">Ir a pagar <Icon name="arrow-right" /></a>
       <button class="drawer__keep" data-cart-close>o seguí mirando</button>
     </footer>
   </aside>
