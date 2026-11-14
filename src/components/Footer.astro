@@ -1,10 +1,11 @@
 ---
 import { u } from '../lib/url';
 import Icon from './Icon.astro';
+import { INSTAGRAM } from '../data/products';
 const cols = [
   { t: 'Tienda', l: [['Amigurumis', u('/tienda?cat=Amigurumis')], ['Mantas', u('/tienda?cat=Mantas')], ['Tops', u('/tienda?cat=Tops')], ['Accesorios', u('/tienda?cat=Accesorios')], ['Personalizados', u('/#a-medida')]] },
   { t: 'Ayuda', l: [['Envíos', u('/#contacto')], ['Cambios', u('/#contacto')], ['Cuidados', u('/#contacto')], ['Preguntas', u('/#contacto')]] },
-  { t: 'Warmy', l: [['Historia', u('/#historia')], ['Proceso', u('/#proceso')], ['Instagram', 'https://instagram.com/warmy_acrochet'], ['WhatsApp', u('/#a-medida')]] },
+  { t: 'Warmy', l: [['Historia', u('/#historia')], ['Proceso', u('/#proceso')], ['Instagram', INSTAGRAM], ['WhatsApp', u('/#a-medida')]] },
 ];
 ---
 <footer class="foot on-dark" id="contacto">

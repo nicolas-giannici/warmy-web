@@ -3,10 +3,12 @@ import { u } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import Icon from '../components/Icon.astro';
-import { PRODUCTS, CATEGORIES, priceLabel } from '../data/products';
+import { PRODUCTS, CATEGORIES, SUBCATEGORIES, subsOf, priceLabel } from '../data/products';
 const feat = PRODUCTS[0];
 const rest = PRODUCTS.slice(1);
 const counts = Object.fromEntries(CATEGORIES.map((c) => [c.name, PRODUCTS.filter((p) => p.cat === c.name).length]));
+const subCounts = Object.fromEntries(SUBCATEGORIES.map((s) => [s.name, PRODUCTS.filter((p) => p.sub === s.name).length]));
+const catsWithSubs = CATEGORIES.filter((c) => subsOf(c.name).length > 0);
 ---
 <Base title="Tienda · Warmy" description="Amigurumis, mantas, tops y accesorios tejidos a mano por Fio.">
   <section class="shop-head wrap">
@@ -37,10 +39,21 @@ const counts = Object.fromEntries(CATEGORIES.map((c) => [c.name, PRODUCTS.filter
         <Icon name="chevron-down" size={16} />
       </label>
     </div>
+    <div class="wrap filters__subs" data-subs hidden>
+      {catsWithSubs.map((c) => (
+        <div class="filters__subgroup" data-subgroup={c.name} hidden>
+          <span class="filters__sublabel">Sólo en {c.name}:</span>
+          <button class="chip chip--sub" aria-pressed="true" data-sub="all">Todas</button>
+          {subsOf(c.name).map((s) => (
+            <button class="chip chip--sub" aria-pressed="false" data-sub={s.name} data-subcat={c.name}>{s.name} · {subCounts[s.name]}</button>
+          ))}
+        </div>
+      ))}
+    </div>
   </div>
 
   <section class="wrap shop">
-    <article class="shop-feat" data-reveal data-cat={feat.cat} data-price={feat.price} data-name={feat.name}>
+    <article class="shop-feat" data-reveal data-cat={feat.cat} data-sub={feat.sub} data-price={feat.price} data-name={feat.name}>
       <a href={u(`/producto/${feat.slug}`)} class="shop-feat__media" style={`--bg:${feat.bg}`}>
         <span class="tag">{feat.tag}</span>
         {feat.photo
@@ -90,6 +103,12 @@ const counts = Object.fromEntries(CATEGORIES.map((c) => [c.name, PRODUCTS.filter
   .filters__sort { position: relative; display: flex; align-items: center; gap: 6px; flex: none; font-size: 15px; color: var(--cocoa); }
   .filters__sort select { appearance: none; border: 1.5px solid var(--line); border-radius: 999px; padding: 10px 36px 10px 16px; background: var(--white); font-weight: 700; color: var(--choco); cursor: pointer; }
   .filters__sort :global(svg) { position: absolute; right: 14px; pointer-events: none; }
+  .filters__subs { display: flex; gap: 10px; align-items: center; padding-bottom: 12px; overflow-x: auto; scrollbar-width: none; }
+  .filters__subs::-webkit-scrollbar { display: none; }
+  .filters__subs[hidden], .filters__subgroup[hidden] { display: none; }
+  .filters__subgroup { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .filters__sublabel { font-family: var(--f-hand); font-size: 20px; color: var(--rose); white-space: nowrap; }
+  .filters__subs .chip--sub { padding: 7px 14px; font-size: 13px; background: var(--white); }
 
   .shop { padding-block: 40px clamp(90px, 10vw, 140px); display: grid; gap: clamp(40px, 4.4vw, 64px); }
   .shop-feat { position: relative; }
@@ -145,24 +164,53 @@ const counts = Object.fromEntries(CATEGORIES.map((c) => [c.name, PRODUCTS.filter
     const grid = document.querySelector<HTMLElement>('[data-grid]')!;
     const all = () => Array.from(document.querySelectorAll<HTMLElement>('.shop [data-cat]'));
     const empty = document.querySelector<HTMLElement>('[data-empty]')!;
-    let cat = new URLSearchParams(location.search).get('cat') || 'all';
+    const subs = document.querySelector<HTMLElement>('[data-subs]');
+    const params = new URLSearchParams(location.search);
+    let cat = params.get('cat') || 'all';
+    let sub = params.get('sub') || 'all';
+    const subBtn = (name: string) => subs?.querySelector<HTMLElement>(`[data-sub="${name}"]`);
+    // Si llegan con ?sub=Princesas sin categoría, deducimos la categoría del chip.
+    if (sub !== 'all' && cat === 'all') cat = subBtn(sub)?.dataset.subcat || cat;
+
+    const syncUrl = () => {
+      const url = new URL(location.href);
+      cat === 'all' ? url.searchParams.delete('cat') : url.searchParams.set('cat', cat);
+      sub === 'all' ? url.searchParams.delete('sub') : url.searchParams.set('sub', sub);
+      history.replaceState(history.state, '', url);
+    };
+    const transition = (fn: () => void) =>
+      (document as any).startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches ? (document as any).startViewTransition(fn) : fn();
+
     const apply = () => {
       root.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.filter === cat)));
+      // Segundo nivel de filtro: sólo se muestra si la categoría activa tiene subcolecciones.
+      const group = subs?.querySelector<HTMLElement>(`[data-subgroup="${cat}"]`);
+      if (!group) sub = 'all';
+      if (subs) {
+        subs.hidden = !group;
+        subs.querySelectorAll<HTMLElement>('[data-subgroup]').forEach((g) => { g.hidden = g !== group; });
+        subs.querySelectorAll<HTMLElement>('[data-sub]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sub === sub)));
+      }
       let shown = 0;
       all().forEach((el) => {
-        const ok = cat === 'all' || el.dataset.cat === cat || el.classList.contains('promo');
+        const isPromo = el.classList.contains('promo');
+        const ok = isPromo || ((cat === 'all' || el.dataset.cat === cat) && (sub === 'all' || el.dataset.sub === sub));
         el.classList.toggle('is-hidden', !ok);
-        if (ok && !el.classList.contains('promo')) { shown++; el.classList.add('is-in'); }
+        if (ok && !isPromo) { shown++; el.classList.add('is-in'); }
       });
       empty.hidden = shown > 0;
     };
     root.querySelectorAll<HTMLElement>('[data-filter]').forEach((b) => b.addEventListener('click', () => {
       cat = b.dataset.filter!;
-      const u = new URL(location.href);
-      cat === 'all' ? u.searchParams.delete('cat') : u.searchParams.set('cat', cat);
-      history.replaceState(history.state, '', u);
-      const go = () => apply();
-      (document as any).startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches ? (document as any).startViewTransition(go) : go();
+      sub = 'all';
+      syncUrl();
+      transition(apply);
+    }));
+    subs?.querySelectorAll<HTMLElement>('[data-sub]').forEach((b) => b.addEventListener('click', () => {
+      sub = b.dataset.sub!;
+      if (sub !== 'all') cat = b.dataset.subcat || cat;
+      syncUrl();
+      transition(apply);
     }));
     root.querySelector<HTMLSelectElement>('[data-sort]')!.addEventListener('change', (e) => {
       const v = (e.target as HTMLSelectElement).value;

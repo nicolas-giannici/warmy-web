@@ -6,6 +6,7 @@ export type Product = {
   price: number;
   from?: boolean; // "desde $X" (a pedido)
   cat: Category;
+  sub?: Subcategory; // subcolección dentro de la categoría (ej.: Princesas)
   bg: string;
   img: string; // ilustración /ilus/*.svg (fallback)
   photo?: string; // foto real /fotos/*.webp (de Instagram @warmy_acrochet)
@@ -18,6 +19,15 @@ export type Product = {
 };
 
 export type Category = 'Amigurumis' | 'Mantas' | 'Tops' | 'Accesorios' | 'Deco' | 'Personalizados';
+
+export type Subcategory = 'Princesas';
+
+/** Subcolecciones: se muestran como segundo nivel de filtro dentro de su categoría. */
+export const SUBCATEGORIES: { name: Subcategory; cat: Category; blurb: string }[] = [
+  { name: 'Princesas', cat: 'Amigurumis', blurb: 'Vestido de gala y coronita' },
+];
+
+export const subsOf = (cat: Category) => SUBCATEGORIES.filter((s) => s.cat === cat);
 
 export const CATEGORIES: { name: Category; blurb: string; img: string; bg: string }[] = [
   { name: 'Amigurumis', blurb: 'Muñecos para abrazar', img: u('/ilus/conejita.svg'), bg: '#F6CADB' },
@@ -68,6 +78,63 @@ export const PRODUCTS: Product[] = [
     desc: 'Trenzas largas con moñitos, vestido coral y zapatitos chocolate. Para jugar durante años.',
     colors: [{ name: 'Coral', hex: '#EF8D7E' }, pastel.lila, pastel.celeste],
   },
+  // ── Princesas (subcolección de Amigurumis) ────────────────────────────────
+  // Fotos: publicaciones de @warmy_acrochet (2020–2025), recortadas y achicadas.
+  // TODO Fio: precios, medidas y horas de trabajo son provisorios (placeholders).
+  {
+    slug: 'moana', photo: u('/fotos/princesas/moana.jpg'), name: 'Moana', price: 48000, from: true, cat: 'Amigurumis', sub: 'Princesas',
+    bg: '#F6CADB', img: u('/ilus/muneca_trenzas.svg'), hours: 24, tag: 'La más nueva', size: '35 cm aprox.',
+    desc: 'La más nueva de la colección. Tres capas de pelo y una falda de tres capas tejidas con muchísimo detalle, para que se mueva como en la película.',
+    colors: [{ name: 'Coral', hex: '#E0705F' }, { name: 'Verde palmera', hex: '#7FA98A' }, pastel.crudo],
+  },
+  {
+    slug: 'merida', photo: u('/fotos/princesas/merida.jpg'), name: 'Mérida', price: 48000, from: true, cat: 'Amigurumis', sub: 'Princesas',
+    bg: '#CDB9EC', img: u('/ilus/muneca_trenzas.svg'), hours: 26, tag: 'A pedido', size: '35 cm aprox.',
+    desc: 'La valiente de pelo de fuego. Es de las que más tiempo llevan: la melena rizada y el vestido con detalles se tejen puntada por puntada.',
+    colors: [{ name: 'Naranja fuego', hex: '#D9763F' }, { name: 'Verde musgo', hex: '#6E8B6B' }, pastel.celeste],
+  },
+  {
+    slug: 'tiana', photo: u('/fotos/princesas/tiana.jpg'), name: 'Tiana', price: 48000, from: true, cat: 'Amigurumis', sub: 'Princesas',
+    bg: '#BFDCC6', img: u('/ilus/muneca_trenzas.svg'), hours: 26, tag: 'Pieza especial', size: '35 cm aprox.',
+    desc: 'Vestido verde agua con capas, corona y una flor tejida en la mano. En palabras de Fio, el trabajo que más tiempo y cariño le llevó.',
+    colors: [{ name: 'Verde agua', hex: '#8FCFC4' }, { name: 'Negro', hex: '#2B2626' }, pastel.crudo],
+  },
+  {
+    slug: 'rapunzel-baby', photo: u('/fotos/princesas/rapunzel.jpg'), name: 'Rapunzel Baby', price: 36000, from: true, cat: 'Amigurumis', sub: 'Princesas',
+    bg: '#F7E3A6', img: u('/ilus/muneca_trenzas.svg'), hours: 18, tag: 'Tamaño mini', size: '25 cm aprox.',
+    desc: 'La versión más chiquita de la colección, con la trenza larga y el vestido rosa lila. Ideal para una nena que la lleve a todos lados.',
+    colors: [pastel.rosa, pastel.lila, { name: 'Marrón claro', hex: '#B08050' }],
+  },
+  {
+    slug: 'jasmine', photo: u('/fotos/princesas/jasmine.jpg'), name: 'Jasmine', price: 46000, from: true, cat: 'Amigurumis', sub: 'Princesas',
+    bg: '#BCD9F2', img: u('/ilus/muneca_trenzas.svg'), hours: 22, tag: 'A pedido', size: '35 cm aprox.',
+    desc: 'Melena negra al viento, la vincha con la joya azul y el conjunto turquesa. Volvió a la colección porque quedó preciosa.',
+    colors: [{ name: 'Turquesa', hex: '#5FBFC6' }, { name: 'Azul joya', hex: '#2F5BA8' }, pastel.crudo],
+  },
+  {
+    slug: 'anna', photo: u('/fotos/princesas/anna.jpg'), name: 'Anna de Frozen', price: 46000, from: true, cat: 'Amigurumis', sub: 'Princesas',
+    bg: '#BCD9F2', img: u('/ilus/muneca_trenzas.svg'), hours: 22, tag: 'A pedido', size: '35 cm aprox.',
+    desc: 'Las trenzas color zanahoria y el vestido de invierno de Arendelle. Una de las favoritas de las fans de Frozen.',
+    colors: [{ name: 'Azul noche', hex: '#3E5C8A' }, pastel.celeste, { name: 'Naranja zanahoria', hex: '#D97B4F' }],
+  },
+  {
+    slug: 'ariel', photo: u('/fotos/princesas/ariel.jpg'), gallery: [u('/fotos/princesas/ariel-2.jpg')], name: 'Ariel (La Sirenita)', price: 46000, from: true, cat: 'Amigurumis', sub: 'Princesas',
+    bg: '#BFDCC6', img: u('/ilus/muneca_trenzas.svg'), hours: 22, tag: 'Pieza única', size: '35 cm aprox.',
+    desc: 'La sirenita con la cola verde y el pelo rojo al viento. Tiene dos fotos en la ficha porque cada pose le cambia la cara.',
+    colors: [{ name: 'Verde agua', hex: '#5FB59B' }, { name: 'Pelirrojo', hex: '#C4573C' }, pastel.lila],
+  },
+  {
+    slug: 'cenicienta-mini', photo: u('/fotos/princesas/cenicienta.jpg'), name: 'Mini Cenicienta', price: 34000, from: true, cat: 'Amigurumis', sub: 'Princesas',
+    bg: '#F6CADB', img: u('/ilus/muneca_trenzas.svg'), hours: 16, tag: 'Tamaño mini', size: '20 cm aprox.',
+    desc: 'Chiquita y prolija: vestido celeste con mangas blancas y carita dormilona. Perfecta para una primera princesa.',
+    colors: [pastel.celeste, pastel.crudo, { name: 'Amarillo suave', hex: '#F2D97A' }],
+  },
+  {
+    slug: 'malefica', photo: u('/fotos/princesas/malefica.jpg'), name: 'Maléfica', price: 50000, from: true, cat: 'Amigurumis',
+    bg: '#CDB9EC', img: u('/ilus/muneca_pedido.svg'), hours: 26, tag: 'Team villanos', size: '35 cm aprox.',
+    desc: 'La villana icónica: cuernos, capa con alas y ojos verdes. Todavía no tiene subcolección propia; si querés, armamos “Villanas”.',
+    colors: [{ name: 'Negro', hex: '#2B2626' }, { name: 'Verde veneno', hex: '#6E8B4F' }, { name: 'Dorado', hex: '#E8C46A' }],
+  },
   {
     slug: 'polainas-pompon', photo: u('/fotos/polainas.webp'), name: 'Polainas Pochoclo', price: 14000, cat: 'Accesorios', bg: '#FBD9CF', img: u('/ilus/polainas.svg'),
     hours: 6, size: 'Talle único',
@@ -105,3 +172,7 @@ export const priceLabel = (p: Product) => (p.from ? 'desde ' : '') + money(p.pri
 
 export const WHATSAPP = '5491100000000'; // TODO: número real de Fio
 export const FREE_SHIPPING = 60000;
+
+/** Instagram de Warmy: ahí Fio publica las piezas nuevas, es la fuente del catálogo. */
+export const INSTAGRAM = 'https://www.instagram.com/warmy_acrochet/';
+export const INSTAGRAM_HANDLE = '@warmy_acrochet';
