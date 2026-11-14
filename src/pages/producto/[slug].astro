@@ -35,6 +35,7 @@ const cuotas = money(Math.ceil(p.price / 3));
   <nav class="wrap crumbs" aria-label="Migas de pan">
     <a href={u('/tienda')}>Tienda</a><Icon name="chevron-right" size={14} />
     <a href={u(`/tienda?cat=${p.cat}`)}>{p.cat}</a><Icon name="chevron-right" size={14} />
+    {p.sub && <><a href={u(`/tienda?cat=${p.cat}&sub=${p.sub}`)}>{p.sub}</a><Icon name="chevron-right" size={14} /></>}
     <span aria-current="page">{p.name}</span>
   </nav>
 

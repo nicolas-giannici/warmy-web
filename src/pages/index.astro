@@ -6,6 +6,7 @@ import Featured from '../components/Featured.astro';
 import Categories from '../components/Categories.astro';
 import Custom from '../components/Custom.astro';
 import Icon from '../components/Icon.astro';
+import { INSTAGRAM, INSTAGRAM_HANDLE } from '../data/products';
 
 const steps = [
   { n: '01', t: 'Elegís', d: 'Una pieza de la tienda o tu idea a medida, con colores y nombre.', img: u('/ilus/ovillo.svg'), bg: 'var(--blush)', time: '1 día' },
@@ -110,13 +111,13 @@ const insta = [
   <section class="ig" aria-labelledby="ig-title">
     <div class="wrap">
       <div class="ig__head">
-        <h2 id="ig-title" class="display h2" data-reveal><em>@warmy_acrochet</em></h2>
-        <a href="https://instagram.com/warmy_acrochet" target="_blank" rel="noopener" class="btn btn--lg" data-reveal style="--i:1">Seguinos <Icon name="instagram" /></a>
+        <h2 id="ig-title" class="display h2" data-reveal><em>{INSTAGRAM_HANDLE}</em></h2>
+        <a href={INSTAGRAM} target="_blank" rel="noopener" class="btn btn--lg" data-reveal style="--i:1">Seguinos <Icon name="instagram" /></a>
       </div>
       <ul class="ig__grid">
         {insta.map((t, i) => (
           <li data-reveal="scale" style={`--i:${i}`}>
-            <a href="https://instagram.com/warmy_acrochet" target="_blank" rel="noopener" class="ig__tile" aria-label="Ver en Instagram">
+            <a href={INSTAGRAM} target="_blank" rel="noopener" class="ig__tile" aria-label="Ver en Instagram">
               <img src={t.img} alt="" width="480" height="640" loading="lazy" decoding="async" />
               <span class="ig__hover"><Icon name="instagram" size={26} /></span>
             </a>

@@ -16,7 +16,7 @@ https://nicolas-giannici.github.io/warmy-web/ — por eso `astro.config.mjs` tie
 Usá `u('/ruta')` (`src/lib/url.ts`) para cualquier link o imagen interna; en scripts del navegador, `import.meta.env.BASE_URL`.
 
 ## Estructura
-- `src/data/products.ts`: catálogo, categorías, precios (placeholders), WhatsApp y umbral de envío gratis.
+- `src/data/products.ts`: catálogo, categorías y subcategorías, precios (placeholders), WhatsApp e Instagram (`INSTAGRAM` / `INSTAGRAM_HANDLE`: @warmy_acrochet, la cuenta donde Fio publica las piezas nuevas) y umbral de envío gratis.
 - `src/layouts/Base.astro`: `<head>`, fuentes, nav, footer, drawer del carrito, toast, View Transitions.
 - `src/components/`: Hero, Featured (carrusel), Categories (índice con preview), Custom (configurador a medida), ProductCard, CartDrawer, Nav (con menú móvil), Footer, Icon.
 - `src/pages/`: `index`, `tienda`, `producto/[slug]`, `checkout`, `404`.

@@ -6,6 +6,7 @@ export type Product = {
   price: number;
   from?: boolean; // "desde $X" (a pedido)
   cat: Category;
+  sub?: Subcategory; // subcolección dentro de la categoría (ej.: Princesas)
   bg: string;
   img: string; // ilustración /ilus/*.svg (fallback)
   photo?: string; // foto real /fotos/*.webp (de Instagram @warmy_acrochet)
@@ -18,6 +19,15 @@ export type Product = {
 };
 
 export type Category = 'Amigurumis' | 'Mantas' | 'Tops' | 'Accesorios' | 'Deco' | 'Personalizados';
+
+export type Subcategory = 'Princesas';
+
+/** Subcolecciones: se muestran como segundo nivel de filtro dentro de su categoría. */
+export const SUBCATEGORIES: { name: Subcategory; cat: Category; blurb: string }[] = [
+  { name: 'Princesas', cat: 'Amigurumis', blurb: 'Vestido de gala y coronita' },
+];
+
+export const subsOf = (cat: Category) => SUBCATEGORIES.filter((s) => s.cat === cat);
 
 export const CATEGORIES: { name: Category; blurb: string; img: string; bg: string }[] = [
   { name: 'Amigurumis', blurb: 'Muñecos para abrazar', img: u('/ilus/conejita.svg'), bg: '#F6CADB' },
@@ -105,3 +115,7 @@ export const priceLabel = (p: Product) => (p.from ? 'desde ' : '') + money(p.pri
 
 export const WHATSAPP = '5491100000000'; // TODO: número real de Fio
 export const FREE_SHIPPING = 60000;
+
+/** Instagram de Warmy: ahí Fio publica las piezas nuevas, es la fuente del catálogo. */
+export const INSTAGRAM = 'https://www.instagram.com/warmy_acrochet/';
+export const INSTAGRAM_HANDLE = '@warmy_acrochet';

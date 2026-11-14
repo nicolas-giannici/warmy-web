@@ -6,7 +6,7 @@ const photo = Astro.props.p.photo;
 interface Props { p: Product; showTag?: boolean; i?: number; eager?: boolean }
 const { p, showTag = true, i = 0, eager = false } = Astro.props;
 ---
-<article class="card" data-reveal style={`--i:${i % 3}`} data-cat={p.cat} data-price={p.price} data-name={p.name}>
+<article class="card" data-reveal style={`--i:${i % 3}`} data-cat={p.cat} data-sub={p.sub} data-price={p.price} data-name={p.name}>
   <div class="card__media" style={`--bg:${p.bg}`}>
     {showTag && p.tag && <span class="tag">{p.tag}</span>}
     {photo
@@ -23,7 +23,7 @@ const { p, showTag = true, i = 0, eager = false } = Astro.props;
   <div class="card__info">
     <div>
       <h3 class="card__name"><a class="card__link" href={u(`/producto/${p.slug}`)}>{p.name}</a></h3>
-      <p class="card__meta">{p.cat} · {p.hours} h de tejido</p>
+      <p class="card__meta">{p.cat}{p.sub ? ` · ${p.sub}` : ''} · {p.hours} h de tejido</p>
     </div>
     <span class="card__price">{priceLabel(p)}</span>
   </div>
