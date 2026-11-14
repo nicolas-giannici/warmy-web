@@ -3,7 +3,7 @@ import { u } from '../../lib/url';
 import Base from '../../layouts/Base.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import Icon from '../../components/Icon.astro';
-import { PRODUCTS, priceLabel, money } from '../../data/products';
+import { PRODUCTS, priceLabel, money, photoInfo } from '../../data/products';
 
 export function getStaticPaths() {
   return PRODUCTS.map((p) => ({ params: { slug: p.slug }, props: { p } }));
@@ -13,8 +13,8 @@ const related = PRODUCTS.filter((x) => x.slug !== p.slug).sort((a, b) => (a.cat 
 type Thumb = { img: string; bg: string; alt: string; zoom?: boolean; cover?: boolean };
 const thumbs: Thumb[] = p.photo
   ? [
-      { img: p.photo, bg: p.bg, alt: `${p.name}, foto real`, cover: true },
-      ...(p.gallery ?? []).map((g, i) => ({ img: g, bg: p.bg, alt: `${p.name}, foto ${i + 2}`, cover: true })),
+      { img: p.photo, bg: photoInfo(p.photo).prolija ? 'var(--white)' : p.bg, alt: `${p.name}, foto real`, cover: !photoInfo(p.photo).cutout },
+      ...(p.gallery ?? []).map((g, i) => ({ img: g, bg: photoInfo(g).prolija ? 'var(--white)' : p.bg, alt: `${p.name}, foto ${i + 2}`, cover: !photoInfo(g).cutout })),
       { img: p.img, bg: p.bg, alt: `${p.name}, ilustración` },
       { img: u('/ilus/aguja.svg'), bg: 'var(--butter)', alt: 'Tejido a crochet' },
       { img: u('/ilus/regalo.svg'), bg: 'var(--sky)', alt: 'Va envuelto para regalo' },
@@ -41,9 +41,9 @@ const cuotas = money(Math.ceil(p.price / 3));
 
   <section class="wrap pdp" data-product>
     <div class="pdp__gallery">
-      <div class="pdp__main" style={`--bg:${p.bg}`} data-main>
+      <div class="pdp__main" style={`--bg:${thumbs[0].bg}`} data-main>
         <img src={thumbs[0].img} alt={p.name} width={p.photo ? 480 : 216} height={p.photo ? 640 : 326} transition:name={`img-${p.slug}`}
-          data-fly data-main-img class:list={[{ 'is-cover': !!p.photo }]} fetchpriority="high" />
+          data-fly data-main-img class:list={[{ 'is-cover': !!p.photo && !photoInfo(p.photo).cutout }]} fetchpriority="high" />
         <span class="sticker pdp__st"><small>TEJIDA EN</small><strong>{p.hours} horas</strong></span>
       </div>
       <div class="pdp__thumbs" role="tablist" aria-label="Fotos">

@@ -3,7 +3,7 @@ import { u } from '../lib/url';
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import Icon from '../components/Icon.astro';
-import { PRODUCTS, CATEGORIES, SUBCATEGORIES, subsOf, priceLabel } from '../data/products';
+import { PRODUCTS, CATEGORIES, SUBCATEGORIES, subsOf, priceLabel, photoInfo } from '../data/products';
 const feat = PRODUCTS[0];
 const rest = PRODUCTS.slice(1);
 const counts = Object.fromEntries(CATEGORIES.map((c) => [c.name, PRODUCTS.filter((p) => p.cat === c.name).length]));
@@ -54,10 +54,10 @@ const catsWithSubs = CATEGORIES.filter((c) => subsOf(c.name).length > 0);
 
   <section class="wrap shop">
     <article class="shop-feat" data-reveal data-cat={feat.cat} data-sub={feat.sub} data-price={feat.price} data-name={feat.name}>
-      <a href={u(`/producto/${feat.slug}`)} class="shop-feat__media" style={`--bg:${feat.bg}`}>
+      <a href={u(`/producto/${feat.slug}`)} class="shop-feat__media" style={`--bg:${feat.photo && photoInfo(feat.photo).prolija ? 'var(--white)' : feat.bg}`}>
         <span class="tag">{feat.tag}</span>
         {feat.photo
-          ? <img class="shop-feat__photo" src={feat.photo} alt={feat.name} width="480" height="640" transition:name={`img-${feat.slug}`} data-fly />
+          ? <img class="shop-feat__photo" class:list={{ 'is-cut': photoInfo(feat.photo).cutout }} src={feat.photo} alt={feat.name} width="480" height="640" transition:name={`img-${feat.slug}`} data-fly />
           : <img src={feat.img} alt={feat.name} width="216" height="326" transition:name={`img-${feat.slug}`} data-fly />}
         <span class="sticker shop-feat__st"><small>PIEZA</small><strong>única</strong></span>
         <span class="shop-feat__info">
@@ -117,6 +117,7 @@ const catsWithSubs = CATEGORIES.filter((c) => subsOf(c.name).length > 0);
   .shop-feat__media:hover img { transform: translateX(-12%) scale(1.05) rotate(-2deg); }
   .shop-feat__media > .tag { position: absolute; left: 28px; top: 28px; }
   .shop-feat__media img.shop-feat__photo { position: absolute; right: 0; top: 0; width: 48%; height: 100%; object-fit: cover; transform: none; border-radius: 0 var(--r-card) var(--r-card) 0; }
+  .shop-feat__media img.shop-feat__photo.is-cut { object-fit: contain; padding: 2% 4%; }
   .shop-feat__media:hover img.shop-feat__photo { transform: none; filter: saturate(1.08); }
   .shop-feat__media:has(.shop-feat__photo) .shop-feat__st { right: auto; left: 34%; }
   .shop-feat__st { --d: 130px; position: absolute; right: 8%; top: 8%; transform: rotate(-10deg); }
