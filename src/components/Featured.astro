@@ -1,7 +1,7 @@
 ---
 import { u } from '../lib/url';
 import Icon from './Icon.astro';
-import { PRODUCTS, priceLabel } from '../data/products';
+import { PRODUCTS, priceLabel, photoInfo } from '../data/products';
 const items = ['conejita-lila', 'unicornio-arcoiris', 'almohadon-corazon', 'muneca-trenzas', 'manta-nube', 'top-margarita']
   .map((s) => PRODUCTS.find((p) => p.slug === s)!);
 ---
@@ -24,9 +24,9 @@ const items = ['conejita-lila', 'unicornio-arcoiris', 'almohadon-corazon', 'mune
   <ul class="feat__track" data-track tabindex="0" aria-label="Productos destacados">
     {items.map((p, i) => (
       <li class="feat__item">
-        <a href={u(`/producto/${p.slug}`)} class="feat__media" style={`--bg:${p.bg}`} draggable="false">
+        <a href={u(`/producto/${p.slug}`)} class="feat__media" style={`--bg:${p.photo && photoInfo(p.photo).prolija ? 'var(--white)' : p.bg}`} draggable="false">
           {p.photo
-            ? <img class="feat__photo" src={p.photo} alt={p.name} width="480" height="640" loading="lazy" draggable="false" />
+            ? <img class="feat__photo" class:list={{ 'is-cut': photoInfo(p.photo).cutout }} src={p.photo} alt={p.name} width="480" height="640" loading="lazy" draggable="false" />
             : <img src={p.img} alt={p.name} width="216" height="326" loading="lazy" draggable="false" />}
           <span class="feat__n">N°{String(i + 1).padStart(2, '0')}</span>
           <span class="tag">{p.tag ?? 'Listo para enviar'}</span>
@@ -75,6 +75,7 @@ const items = ['conejita-lila', 'unicornio-arcoiris', 'almohadon-corazon', 'mune
   .feat__media:hover { border-radius: 40% 40% 28px 28px; }
   .feat__media:hover img { transform: scale(1.07) translateY(-4px); }
   .feat__media img.feat__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .feat__media img.feat__photo.is-cut { object-fit: contain; }
   .feat__media:hover img.feat__photo { transform: scale(1.05); }
   .feat__media:has(.feat__photo) .feat__n { color: var(--cream); text-shadow: 0 1px 8px rgb(0 0 0 / .45); z-index: 1; }
   .feat__media .tag { z-index: 1; }

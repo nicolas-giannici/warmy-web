@@ -1,9 +1,12 @@
 ---
 import { u } from '../lib/url';
 import Icon from './Icon.astro';
-import { PRODUCTS } from '../data/products';
+import { PRODUCTS, photoInfo } from '../data/products';
 // Datos mínimos para que el script del carrito pinte los ítems sin pedirlos al servidor.
-const catalog = Object.fromEntries(PRODUCTS.map((p) => [p.slug, { name: p.name, price: p.price, img: p.photo ?? p.img, cover: !!p.photo, bg: p.bg }]));
+const catalog = Object.fromEntries(PRODUCTS.map((p) => {
+  const info = p.photo ? photoInfo(p.photo) : null;
+  return [p.slug, { name: p.name, price: p.price, img: p.photo ?? p.img, cover: !!p.photo && !info?.cutout, bg: info?.prolija ? '#fff' : p.bg }];
+}));
 ---
 <div class="drawer" data-drawer aria-hidden="true">
   <div class="drawer__scrim" data-cart-close></div>
