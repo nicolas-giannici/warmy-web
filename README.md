@@ -22,6 +22,7 @@ Usá `u('/ruta')` (`src/lib/url.ts`) para cualquier link o imagen interna; en sc
 - `src/pages/`: `index`, `tienda`, `producto/[slug]`, `checkout`, `404`.
 - `src/scripts/app.ts`: carrito (localStorage `warmy-cart`), drawer, menú, reveal on scroll, toast y "vuelo" al carrito.
 - `public/ilus/*.svg`: ilustraciones de productos (placeholders), exportadas con `design/generador/export_web.py`.
+- `public/fotos/princesas/*.jpg`: fotos de la subcolección Princesas, bajadas de las publicaciones de @warmy_acrochet y achicadas a 1100 px de ancho. Precios, medidas y horas de esas fichas son provisorios hasta que Fio pase la lista real.
 - `public/draco/*.webp`: Draco (generado con Codex a partir de su foto).
 
 ## Pendiente
